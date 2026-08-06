@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Himanshu's AI Apps — Live Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root {
+  --ink:        #09090B;
+  --surface:    #111115;
+  --card:       #18181B;
+  --lift:       #27272A;
+  --border:     rgba(255,255,255,0.08);
+  --border2:    rgba(255,255,255,0.14);
+  --text:       #FAFAFA;
+  --text2:      #A1A1AA;
+  --text3:      #52525B;
+  --gold:       #EAB308;
+  --golddim:    rgba(234,179,8,0.10);
+  --teal:       #14B8A6;
+  --tealdim:    rgba(20,184,166,0.10);
+  --blue:       #60A5FA;
+  --bluedim:    rgba(96,165,250,0.10);
+  --coral:      #F87171;
+  --coraldim:   rgba(248,113,113,0.10);
+  --purple:     #A78BFA;
+  --purpledim:  rgba(167,139,250,0.10);
+  --r:          12px;
+  --r-sm:       8px;
+}
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--ink);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── AMBIENT BACKGROUND ── */
+body::before {
+  content:'';
+  position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(ellipse 80% 40% at 20% 0%, rgba(234,179,8,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(20,184,166,0.04) 0%, transparent 60%);
+}
+
+.wrap { position:relative; z-index:1; max-width:900px; margin:0 auto; padding:0 24px; }
+
+/* ── HEADER ── */
+header {
+  border-bottom: 1px solid var(--border);
+  padding: 20px 0;
+  position: sticky; top:0; z-index:100;
+  background: rgba(9,9,11,0.90);
+  backdrop-filter: blur(16px);
+}
+.header-inner {
+  display:flex; align-items:center; justify-content:space-between;
+}
+.logo {
+  font-family:'Syne',sans-serif;
+  font-size:14px; font-weight:700;
+  color:var(--gold); letter-spacing:.06em;
+  text-decoration:none;
+}
+.back-link {
+  font-size:13px; color:var(--text2);
+  text-decoration:none;
+  display:flex; align-items:center; gap:6px;
+  transition:color .15s;
+}
+.back-link:hover { color:var(--text); }
+
+/* ── HERO ── */
+.hero { padding: 56px 0 48px; text-align:center; }
+.hero-eyebrow {
+  font-family:'DM Mono',monospace;
+  font-size:11px; letter-spacing:.12em;
+  color:var(--text3); text-transform:uppercase;
+  margin-bottom:16px;
+}
+.hero h1 {
+  font-family:'Syne',sans-serif;
+  font-size:clamp(32px,5vw,52px);
+  font-weight:800; line-height:1.1;
+  margin-bottom:14px; letter-spacing:-.02em;
+}
+.hero h1 em { color:var(--gold); font-style:normal; }
+.hero-desc {
+  font-size:16px; color:var(--text2);
+  max-width:480px; margin:0 auto 28px;
+  line-height:1.7;
+}
+.app-pills {
+  display:flex; gap:8px; justify-content:center; flex-wrap:wrap;
+}
+.pill {
+  font-family:'DM Mono',monospace;
+  font-size:11px; padding:4px 12px; border-radius:20px;
+  font-weight:500; cursor:pointer; transition:all .15s;
+  border:1px solid var(--border2);
+  background:transparent; color:var(--text2);
+}
+.pill:hover, .pill.active { color:var(--text); }
+.pill[data-app="3"].active  { background:var(--purpledim); border-color:var(--purple); color:var(--purple); }
+.pill[data-app="4"].active  { background:var(--tealdim); border-color:var(--teal); color:var(--teal); }
+.pill[data-app="5"].active  { background:var(--golddim); border-color:var(--gold); color:var(--gold); }
+.pill[data-app="6"].active  { background:var(--coraldim); border-color:var(--coral); color:var(--coral); }
+
+/* ── APP PANELS ── */
+.app-panel { display:none; animation: fadeUp .3s ease; }
+.app-panel.active { display:block; }
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(12px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+.panel-header {
+  display:flex; align-items:flex-start; gap:14px;
+  padding:24px 28px; margin-bottom:0;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-bottom:none;
+  border-radius: var(--r) var(--r) 0 0;
+}
+.panel-icon {
+  width:44px; height:44px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:20px; flex-shrink:0;
+}
+.panel-meta {}
+.panel-name {
+  font-family:'Syne',sans-serif;
+  font-size:17px; font-weight:700; margin-bottom:3px;
+}
+.panel-desc { font-size:13px; color:var(--text2); }
+
+.panel-body {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-top:none;
+  border-radius: 0 0 var(--r) var(--r);
+  padding:28px;
+}
+
+/* ── CHAT UI (App 3 & 5) ── */
+.chat-messages {
+  min-height:280px; max-height:400px;
+  overflow-y:auto; margin-bottom:16px;
+  display:flex; flex-direction:column; gap:12px;
+  padding:4px 0;
+}
+.msg {
+  display:flex; gap:10px; align-items:flex-start;
+}
+.msg.user { flex-direction:row-reverse; }
+.msg-avatar {
+  width:30px; height:30px; border-radius:50%;
+  flex-shrink:0; display:flex; align-items:center;
+  justify-content:center; font-size:13px;
+  background:var(--lift);
+}
+.msg.user .msg-avatar { background:var(--gold); color:#000; }
+.msg-bubble {
+  max-width:75%; padding:10px 14px;
+  border-radius:var(--r-sm); font-size:14px;
+  line-height:1.6; color:var(--text);
+}
+.msg.ai .msg-bubble {
+  background:var(--lift);
+  border:1px solid var(--border);
+}
+.msg.user .msg-bubble {
+  background:var(--gold);
+  color:#000; font-weight:500;
+}
+.msg.system .msg-bubble {
+  background:transparent;
+  color:var(--text3); font-size:12px;
+  font-style:italic; border:none; padding:4px 0;
+}
+.msg.tools .msg-bubble {
+  background:var(--golddim);
+  border:1px solid rgba(234,179,8,0.2);
+  color:var(--gold); font-family:'DM Mono',monospace;
+  font-size:11px;
+}
+
+.chat-input-row {
+  display:flex; gap:10px;
+}
+.chat-input {
+  flex:1; padding:10px 14px;
+  background:var(--lift); border:1px solid var(--border2);
+  border-radius:var(--r-sm); color:var(--text);
+  font-size:14px; font-family:'DM Sans',sans-serif;
+  outline:none; resize:none;
+  transition:border-color .15s;
+}
+.chat-input:focus { border-color:var(--text3); }
+.chat-input::placeholder { color:var(--text3); }
+
+.btn-send {
+  padding:10px 20px; border-radius:var(--r-sm);
+  border:none; font-size:13px; font-weight:600;
+  cursor:pointer; transition:all .15s; white-space:nowrap;
+  font-family:'DM Sans',sans-serif;
+}
+.btn-gold  { background:var(--gold); color:#000; }
+.btn-gold:hover  { background:#FDE047; }
+.btn-teal  { background:var(--teal); color:#000; }
+.btn-teal:hover  { background:#2DD4BF; }
+.btn-coral { background:var(--coral); color:#000; }
+.btn-coral:hover { background:#FCA5A5; }
+.btn-purple{ background:var(--purple); color:#000; }
+.btn-purple:hover{ background:#C4B5FD; }
+.btn-send:disabled { opacity:.45; cursor:not-allowed; }
+
+/* ── RAG UI (App 4) ── */
+.rag-step {
+  background:var(--lift); border:1px solid var(--border);
+  border-radius:var(--r-sm); padding:16px 18px; margin-bottom:12px;
+}
+.step-label {
+  font-family:'DM Mono',monospace;
+  font-size:11px; color:var(--text3);
+  letter-spacing:.08em; margin-bottom:8px;
+}
+.collection-tag {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:4px 12px; border-radius:20px;
+  background:var(--tealdim); border:1px solid rgba(20,184,166,0.2);
+  color:var(--teal); font-family:'DM Mono',monospace;
+  font-size:12px; margin-top:8px;
+}
+
+/* ── VISION UI (App 6) ── */
+.upload-zone {
+  border:2px dashed var(--border2);
+  border-radius:var(--r); padding:40px 24px;
+  text-align:center; cursor:pointer;
+  transition:all .2s; position:relative;
+  margin-bottom:16px;
+}
+.upload-zone:hover, .upload-zone.drag-over {
+  border-color:var(--coral);
+  background:var(--coraldim);
+}
+.upload-icon { font-size:36px; margin-bottom:10px; opacity:.6; }
+.upload-text { font-size:14px; color:var(--text2); }
+.upload-text strong { color:var(--text); }
+.upload-sub { font-size:12px; color:var(--text3); margin-top:4px; }
+#fileInputApp6 { display:none; }
+.image-preview {
+  width:100%; max-height:240px;
+  object-fit:contain; border-radius:var(--r-sm);
+  border:1px solid var(--border);
+  margin-bottom:16px; display:none;
+}
+.analysis-tabs {
+  display:flex; gap:6px; margin-bottom:16px; flex-wrap:wrap;
+}
+.atab {
+  padding:6px 14px; border-radius:20px;
+  border:1px solid var(--border2);
+  font-size:12px; cursor:pointer;
+  background:transparent; color:var(--text2);
+  font-family:'DM Sans',sans-serif;
+  transition:all .15s;
+}
+.atab:hover { color:var(--text); }
+.atab.active { background:var(--coraldim); border-color:var(--coral); color:var(--coral); }
+
+/* ── RESULT BOX ── */
+.result-box {
+  background:var(--lift); border:1px solid var(--border);
+  border-radius:var(--r-sm); padding:16px;
+  font-size:13px; line-height:1.7;
+  min-height:80px; color:var(--text);
+  white-space:pre-wrap;
+  display:none;
+}
+.result-box.show { display:block; }
+.result-box.loading {
+  display:flex; align-items:center; gap:10px;
+  color:var(--text2);
+}
+
+.json-display {
+  font-family:'DM Mono',monospace;
+  font-size:12px; color:#94A3B8;
+  overflow-x:auto;
+}
+
+/* ── STRUCTURED RESULTS ── */
+.analysis-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:10px; margin-bottom:10px;
+}
+.analysis-field {
+  background:var(--ink); border-radius:var(--r-sm);
+  padding:10px 12px; border:1px solid var(--border);
+}
+.field-label { font-size:10px; color:var(--text3); font-family:'DM Mono',monospace; letter-spacing:.06em; margin-bottom:4px; }
+.field-value { font-size:13px; color:var(--text); }
+
+/* ── SPINNER ── */
+.spinner {
+  width:16px; height:16px; border-radius:50%;
+  border:2px solid var(--border2);
+  border-top-color:var(--gold);
+  animation:spin .7s linear infinite;
+  flex-shrink:0;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+
+/* ── MISC ── */
+.hint {
+  font-size:12px; color:var(--text3);
+  margin-top:10px; line-height:1.6;
+}
+.hint strong { color:var(--text2); }
+.tag-row { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+.tag {
+  font-size:11px; padding:2px 8px; border-radius:4px;
+  background:var(--lift); border:1px solid var(--border);
+  color:var(--text2); font-family:'DM Mono',monospace;
+}
+.sources-box {
+  margin-top:12px; border-top:1px solid var(--border);
+  padding-top:12px;
+}
+.source-item {
+  font-size:12px; color:var(--text3);
+  padding:6px 0; border-bottom:1px solid var(--border);
+  display:flex; justify-content:space-between; align-items:center;
+}
+.source-item:last-child { border-bottom:none; }
+.score-badge {
+  font-family:'DM Mono',monospace; font-size:11px;
+  padding:2px 7px; border-radius:4px;
+  background:var(--tealdim); color:var(--teal);
+}
+.invoice-table {
+  width:100%; border-collapse:collapse; margin-top:8px;
+  font-size:13px;
+}
+.invoice-table th {
+  text-align:left; padding:6px 10px;
+  font-size:11px; font-family:'DM Mono',monospace;
+  color:var(--text3); font-weight:500;
+  border-bottom:1px solid var(--border);
+}
+.invoice-table td {
+  padding:7px 10px; border-bottom:1px solid var(--border);
+  color:var(--text2);
+}
+.invoice-table tr:last-child td { border-bottom:none; }
+.total-row td { color:var(--text); font-weight:500; }
+
+/* ── CONFIG NOTICE ── */
+.config-bar {
+  background:var(--golddim); border:1px solid rgba(234,179,8,0.2);
+  border-radius:var(--r-sm); padding:12px 16px;
+  font-size:13px; color:var(--gold); margin-bottom:20px;
+}
+.config-bar a { color:var(--gold); text-decoration:underline; }
+
+@media (max-width:600px) {
+  .analysis-grid { grid-template-columns:1fr; }
+  .panel-header { padding:18px; }
+  .panel-body { padding:18px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="header-inner">
+      <a href="https://himanshu-ai-explains.github.io" class="logo">himanshu-ai-explains</a>
+      <a href="https://himanshu-ai-explains.github.io" class="back-link">
+        ← Back to portfolio
+      </a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow">Live demos · .NET + AI · Built with Semantic Kernel</div>
+    <h1>AI Apps — <em>Try Them Live</em></h1>
+    <p class="hero-desc">Four real AI applications running on Azure. No setup needed — just pick an app and start.</p>
+    <div class="app-pills">
+      <button class="pill active" data-app="3" onclick="switchApp(3)">App 3 — Chat</button>
+      <button class="pill" data-app="4" onclick="switchApp(4)">App 4 — PDF Q&A</button>
+      <button class="pill" data-app="5" onclick="switchApp(5)">App 5 — AI Agent</button>
+      <button class="pill" data-app="6" onclick="switchApp(6)">App 6 — Image AI</button>
+    </div>
+  </div>
+
+  <!-- CONFIG NOTICE -->
+  <div class="config-bar" id="configBar">
+    ⚙️ <strong>One-time setup:</strong> Update the API URLs at the top of this page's source with your Azure URLs.
+    <a href="#" onclick="document.getElementById('configBar').style.display='none'; return false;">Dismiss</a>
+  </div>
+
+  <!-- ══ APP 3 — CHAT ══ -->
+  <div class="app-panel active" id="panel-3">
+    <div class="panel-header">
+      <div class="panel-icon" style="background:var(--purpledim); color:var(--purple)">💬</div>
+      <div class="panel-meta">
+        <div class="panel-name" style="color:var(--purple)">Semantic Kernel Chat</div>
+        <div class="panel-desc">AI chatbot with conversation memory · Built with Semantic Kernel + GPT-4o-mini · Deployed on Azure</div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="chat-messages" id="chat3-messages">
+        <div class="msg system"><div class="msg-bubble">Chat started. Your conversation history is maintained — ask follow-up questions and the AI will remember context.</div></div>
+      </div>
+      <div class="chat-input-row">
+        <textarea class="chat-input" id="chat3-input" placeholder="Type a message... (Shift+Enter for new line)" rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat3();}"></textarea>
+        <button class="btn-send btn-purple" onclick="sendChat3()" id="chat3-btn">Send</button>
+      </div>
+      <p class="hint">Try: <strong>"Explain RAG in simple words"</strong> · <strong>"What is a token?"</strong> · <strong>"Now give me an example of that"</strong> (tests memory)</p>
+    </div>
+  </div>
+
+  <!-- ══ APP 4 — RAG ══ -->
+  <div class="app-panel" id="panel-4">
+    <div class="panel-header">
+      <div class="panel-icon" style="background:var(--tealdim); color:var(--teal)">📄</div>
+      <div class="panel-meta">
+        <div class="panel-name" style="color:var(--teal)">Chat with Your PDF</div>
+        <div class="panel-desc">Upload any PDF · AI reads and understands it · Ask questions · Get cited answers</div>
+      </div>
+    </div>
+    <div class="panel-body">
+
+      <!-- Step 1 -->
+      <div class="rag-step">
+        <div class="step-label">STEP 1 — UPLOAD YOUR PDF</div>
+        <input type="file" id="rag-file" accept=".pdf" style="display:none" onchange="uploadPDF()">
+        <button class="btn-send btn-teal" onclick="document.getElementById('rag-file').click()" id="rag-upload-btn">
+          Choose PDF file
+        </button>
+        <div id="rag-upload-status" class="hint" style="margin-top:8px"></div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="rag-step">
+        <div class="step-label">STEP 2 — ASK A QUESTION</div>
+        <div style="display:flex; gap:10px;">
+          <input type="text" class="chat-input" id="rag-question"
+            placeholder="Ask something about your document..."
+            onkeydown="if(event.key==='Enter')askRAG()"
+            style="height:40px;">
+          <button class="btn-send btn-teal" onclick="askRAG()" id="rag-ask-btn" disabled>Ask</button>
+        </div>
+        <p class="hint">Try: <strong>"What is the main topic?"</strong> · <strong>"Summarise section 2"</strong> · <strong>"What are the key points?"</strong></p>
+      </div>
+
+      <!-- Answer -->
+      <div id="rag-result" class="result-box" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- ══ APP 5 — AGENT ══ -->
+  <div class="app-panel" id="panel-5">
+    <div class="panel-header">
+      <div class="panel-icon" style="background:var(--golddim); color:var(--gold)">🤖</div>
+      <div class="panel-meta">
+        <div class="panel-name" style="color:var(--gold)">AI Agent — 13 Tools</div>
+        <div class="panel-desc">Autonomous AI · Decides which tools to use · Reasons across multiple steps · Built with ReAct pattern</div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="chat-messages" id="chat5-messages">
+        <div class="msg system"><div class="msg-bubble">Agent ready. It has 13 tools across 4 plugins: DateTime, Math, Tasks, and IndiaInfo. Ask it to do multiple things at once — watch it call tools automatically.</div></div>
+      </div>
+      <div class="chat-input-row">
+        <textarea class="chat-input" id="chat5-input" placeholder="Ask the agent to do something..." rows="1"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat5();}"></textarea>
+        <button class="btn-send btn-gold" onclick="sendChat5()" id="chat5-btn">Send</button>
+      </div>
+      <p class="hint">
+        Try these to see the agent use multiple tools at once:<br>
+        <strong>"What day is it, calculate 18% of 5000, and tell me about AI jobs in Delhi"</strong><br>
+        <strong>"Add a high priority task: review my RAG app. Then show me all tasks."</strong><br>
+        <strong>"Convert $150 to rupees and tell me about Azure AI certifications"</strong>
+      </p>
+    </div>
+  </div>
+
+  <!-- ══ APP 6 — VISION ══ -->
+  <div class="app-panel" id="panel-6">
+    <div class="panel-header">
+      <div class="panel-icon" style="background:var(--coraldim); color:var(--coral)">👁️</div>
+      <div class="panel-meta">
+        <div class="panel-name" style="color:var(--coral)">Image AI — See & Understand</div>
+        <div class="panel-desc">Upload any image · AI reads text, analyses content, answers questions, extracts invoice data</div>
+      </div>
+    </div>
+    <div class="panel-body">
+
+      <!-- Upload zone -->
+      <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInputApp6').click()"
+        ondragover="event.preventDefault();this.classList.add('drag-over')"
+        ondragleave="this.classList.remove('drag-over')"
+        ondrop="handleDrop(event)">
+        <div class="upload-icon">🖼️</div>
+        <div class="upload-text"><strong>Click to upload</strong> or drag and drop</div>
+        <div class="upload-sub">JPG, PNG, WebP · Max 10MB · Try a receipt, invoice, screenshot, or any photo</div>
+      </div>
+      <input type="file" id="fileInputApp6" accept="image/*" onchange="handleImageSelect(event)">
+      <img id="imagePreview" class="image-preview" alt="Preview">
+
+      <!-- Analysis type tabs -->
+      <div class="analysis-tabs">
+        <button class="atab active" data-mode="analyze" onclick="setMode('analyze')">Full Analysis</button>
+        <button class="atab" data-mode="extract-text" onclick="setMode('extract-text')">Extract Text</button>
+        <button class="atab" data-mode="ask" onclick="setMode('ask')">Ask a Question</button>
+        <button class="atab" data-mode="extract-invoice" onclick="setMode('extract-invoice')">Invoice Data</button>
+      </div>
+
+      <!-- Question input (shown for 'ask' mode) -->
+      <div id="question-input-wrap" style="display:none; margin-bottom:16px;">
+        <input type="text" class="chat-input" id="vision-question"
+          placeholder="What do you want to know about this image?"
+          style="height:42px; width:100%;"
+          onkeydown="if(event.key==='Enter')analyzeImage()">
+      </div>
+
+      <button class="btn-send btn-coral" onclick="analyzeImage()" id="analyze-btn" disabled style="margin-bottom:16px;">
+        Analyse Image
+      </button>
+
+      <!-- Result -->
+      <div id="vision-result"></div>
+    </div>
+  </div>
+
+  <!-- BOTTOM LINKS -->
+  <div style="text-align:center; padding:48px 0 32px; border-top:1px solid var(--border); margin-top:40px;">
+    <p style="font-size:13px; color:var(--text3); margin-bottom:16px;">
+      All apps built with .NET 8 · Semantic Kernel · OpenAI GPT-4o · Deployed on Azure App Service
+    </p>
+    <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+      <a href="https://himanshu-ai-explains.github.io" style="font-size:13px; color:var(--text2); text-decoration:none;">← Portfolio</a>
+      <a href="https://github.com/himanshu-ai-explains/dotnet-ai-journey" target="_blank" style="font-size:13px; color:var(--text2); text-decoration:none;">GitHub →</a>
+      <a href="https://www.linkedin.com/in/YOUR-LINKEDIN" target="_blank" style="font-size:13px; color:var(--text2); text-decoration:none;">LinkedIn →</a>
+    </div>
+  </div>
+
+</div><!-- /wrap -->
+
+<script>
+// ══════════════════════════════════════
+// ⚙️  UPDATE THESE WITH YOUR AZURE URLS
+// ══════════════════════════════════════
+const URLS = {
+  app3: 'https://aiapp3-himanshu-h8e3c0bfhbbjfbhr.centralindia-01.azurewebsites.net',
+  app4: 'https://aiapp4rag-himanshu-hnggcnckgkepecce.centralindia-01.azurewebsites.net',
+  app5: 'https://aiapp5agents-himanshu-azfkh9akauecdtg8.centralindia-01.azurewebsites.net',
+  app6: 'https://aiapp6multimodalvision-eab0hkbfc6bjgeca.centralindia-01.azurewebsites.net'
+};
+
+// ── STATE ──
+let ragCollectionName = null;
+let currentMode = 'analyze';
+let selectedImageFile = null;
+const chat3History = [];
+const chat5History = [];
+
+// ── NAVIGATION ──
+function switchApp(n) {
+  document.querySelectorAll('.app-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  document.getElementById(`panel-${n}`).classList.add('active');
+  document.querySelector(`.pill[data-app="${n}"]`).classList.add('active');
+}
+
+// ══ APP 3 — CHAT ══
+async function sendChat3() {
+  const input = document.getElementById('chat3-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  appendMsg('chat3-messages', 'user', msg, '👤');
+  input.value = '';
+  input.style.height = 'auto';
+  chat3History.push({ role:'user', content:msg });
+
+  const btn = document.getElementById('chat3-btn');
+  btn.disabled = true;
+  const loadingId = appendMsg('chat3-messages', 'ai', '...', '🤖');
+
+  try {
+    const res = await fetch(`${URLS.app3}/api/chat`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ message: msg, sessionId:'demo-web-' + getSessionId('chat3') })
+    });
+    const data = await res.json();
+    const reply = data.reply || data.answer || JSON.stringify(data);
+    updateMsg(loadingId, reply);
+    chat3History.push({ role:'assistant', content:reply });
+  } catch(e) {
+    updateMsg(loadingId, `⚠️ Could not reach the API. The Azure app may be sleeping — try again in 30 seconds.\n\n${e.message}`);
+  } finally { btn.disabled = false; }
+}
+
+// ══ APP 4 — RAG ══
+async function uploadPDF() {
+  const file = document.getElementById('rag-file').files[0];
+  if (!file) return;
+
+  const btn = document.getElementById('rag-upload-btn');
+  const status = document.getElementById('rag-upload-status');
+  const askBtn = document.getElementById('rag-ask-btn');
+
+  btn.disabled = true;
+  btn.textContent = 'Processing PDF...';
+  status.innerHTML = '<span style="color:var(--text2)">Extracting text, chunking, and generating embeddings...</span>';
+
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const res = await fetch(`${URLS.app4}/api/rag/upload`, {
+      method:'POST', body: formData
+    });
+    const data = await res.json();
+
+    if (data.collectionName) {
+      ragCollectionName = data.collectionName;
+      status.innerHTML = `
+        <div class="collection-tag">✓ Ready · ${data.chunksCreated} chunks · "${data.fileName}"</div>
+      `;
+      askBtn.disabled = false;
+      btn.textContent = 'Upload a different PDF';
+    } else {
+      status.innerHTML = `<span style="color:var(--coral)">Upload failed: ${data.error || 'Unknown error'}</span>`;
+      btn.textContent = 'Try again';
+    }
+  } catch(e) {
+    status.innerHTML = `<span style="color:var(--coral)">⚠️ Cannot reach API: ${e.message}</span>`;
+    btn.textContent = 'Try again';
+  } finally { btn.disabled = false; }
+}
+
+async function askRAG() {
+  if (!ragCollectionName) {
+    showRAGResult('Please upload a PDF first.', false);
+    return;
+  }
+  const question = document.getElementById('rag-question').value.trim();
+  if (!question) return;
+
+  const btn = document.getElementById('rag-ask-btn');
+  btn.disabled = true;
+  showRAGResult('Searching document...', true);
+
+  try {
+    const res = await fetch(`${URLS.app4}/api/rag/ask`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ question, collectionName: ragCollectionName })
+    });
+    const data = await res.json();
+
+    let html = `<div style="margin-bottom:12px;">${escapeHtml(data.answer || 'No answer returned.')}</div>`;
+
+    if (data.sources && data.sources.length > 0) {
+      html += `<div class="sources-box"><div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:6px;">SOURCES USED</div>`;
+      data.sources.forEach((s, i) => {
+        html += `<div class="source-item">
+          <span>Chunk #${s.chunkIndex}: ${escapeHtml((s.preview||'').substring(0,80))}...</span>
+          <span class="score-badge">${(s.relevanceScore*100).toFixed(0)}%</span>
+        </div>`;
+      });
+      html += `</div>`;
+    }
+
+    const el = document.getElementById('rag-result');
+    el.innerHTML = html;
+    el.style.display = 'block';
+    el.classList.remove('loading');
+  } catch(e) {
+    showRAGResult(`⚠️ Error: ${e.message}`, false);
+  } finally { btn.disabled = false; }
+}
+
+function showRAGResult(msg, loading) {
+  const el = document.getElementById('rag-result');
+  el.style.display = 'flex';
+  if (loading) {
+    el.classList.add('loading');
+    el.innerHTML = `<div class="spinner"></div><span>${msg}</span>`;
+  } else {
+    el.classList.remove('loading');
+    el.style.display = 'block';
+    el.innerHTML = msg;
+  }
+}
+
+// ══ APP 5 — AGENT ══
+async function sendChat5() {
+  const input = document.getElementById('chat5-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  appendMsg('chat5-messages', 'user', msg, '👤');
+  input.value = '';
+  const btn = document.getElementById('chat5-btn');
+  btn.disabled = true;
+
+  const loadingId = appendMsg('chat5-messages', 'ai', '⚙️ Agent is reasoning...', '🤖');
+
+  try {
+    const res = await fetch(`${URLS.app5}/api/agent/chat`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        message: msg,
+        sessionId: 'demo-web-' + getSessionId('chat5')
+      })
+    });
+    const data = await res.json();
+
+    if (data.toolsUsed && data.toolsUsed.length > 0) {
+      const toolMsg = '🔧 Tools used: ' + data.toolsUsed.join(' → ');
+      updateMsg(loadingId, toolMsg, 'tools');
+      appendMsg('chat5-messages', 'ai', data.answer || data.reply || JSON.stringify(data), '🤖');
+    } else {
+      updateMsg(loadingId, data.answer || data.reply || JSON.stringify(data));
+    }
+  } catch(e) {
+    updateMsg(loadingId, `⚠️ Could not reach the agent API. Try again in 30 seconds.\n\n${e.message}`);
+  } finally { btn.disabled = false; }
+}
+
+// ══ APP 6 — VISION ══
+function handleImageSelect(e) {
+  const file = e.target.files[0];
+  if (file) loadImage(file);
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('uploadZone').classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) loadImage(file);
+}
+
+function loadImage(file) {
+  selectedImageFile = file;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const preview = document.getElementById('imagePreview');
+    preview.src = e.target.result;
+    preview.style.display = 'block';
+    document.getElementById('uploadZone').style.display = 'none';
+    document.getElementById('analyze-btn').disabled = false;
+    document.getElementById('vision-result').innerHTML = '';
+  };
+  reader.readAsDataURL(file);
+}
+
+function setMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.atab').forEach(t => {
+    t.classList.toggle('active', t.dataset.mode === mode);
+  });
+  document.getElementById('question-input-wrap').style.display =
+    mode === 'ask' ? 'block' : 'none';
+  document.getElementById('analyze-btn').textContent =
+    { analyze:'Analyse Image', 'extract-text':'Extract Text',
+      ask:'Get Answer', 'extract-invoice':'Extract Invoice Data' }[mode];
+}
+
+async function analyzeImage() {
+  if (!selectedImageFile) return;
+
+  const btn = document.getElementById('analyze-btn');
+  const result = document.getElementById('vision-result');
+  btn.disabled = true;
+  btn.textContent = 'Analysing...';
+
+  result.innerHTML = `<div class="result-box loading show"><div class="spinner"></div><span>GPT-4o is analysing your image...</span></div>`;
+
+  try {
+    const formData = new FormData();
+    formData.append('image', selectedImageFile);
+
+    let endpoint = `${URLS.app6}/api/vision/${currentMode}`;
+    if (currentMode === 'ask') {
+      const q = document.getElementById('vision-question').value.trim();
+      if (!q) { result.innerHTML = '<div class="result-box show">Please enter a question.</div>'; return; }
+      formData.append('question', q);
+    }
+
+    const res = await fetch(endpoint, { method:'POST', body: formData });
+    const data = await res.json();
+
+    result.innerHTML = renderVisionResult(data, currentMode);
+  } catch(e) {
+    result.innerHTML = `<div class="result-box show">⚠️ Error: ${e.message}</div>`;
+  } finally {
+    btn.disabled = false;
+    setMode(currentMode);
+  }
+}
+
+function renderVisionResult(data, mode) {
+  if (mode === 'analyze') {
+    const tags = (data.tags||[]).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('');
+    const items = (data.detectedItems||[]).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('');
+    return `
+      <div class="result-box show">
+        <div class="analysis-field" style="margin-bottom:10px">
+          <div class="field-label">DESCRIPTION</div>
+          <div class="field-value">${escapeHtml(data.description||'')}</div>
+        </div>
+        ${data.extractedText ? `
+        <div class="analysis-field" style="margin-bottom:10px">
+          <div class="field-label">TEXT FOUND IN IMAGE</div>
+          <div class="field-value" style="font-family:'DM Mono',monospace;font-size:12px">${escapeHtml(data.extractedText)}</div>
+        </div>` : ''}
+        ${items ? `<div style="margin-bottom:8px"><div class="field-label" style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:6px">DETECTED ITEMS</div><div class="tag-row">${items}</div></div>` : ''}
+        ${tags ? `<div><div class="field-label" style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:6px">TAGS</div><div class="tag-row">${tags}</div></div>` : ''}
+      </div>`;
+  }
+
+  if (mode === 'extract-text') {
+    const text = data.extractedText || data || '';
+    return `
+      <div class="result-box show">
+        <div class="field-label" style="color:var(--text3);font-family:'DM Mono',monospace;font-size:10px;margin-bottom:8px">
+          EXTRACTED TEXT · ${(data.characterCount||text.length).toLocaleString()} characters
+        </div>
+        <div style="font-family:'DM Mono',monospace;font-size:13px;white-space:pre-wrap;color:var(--text2)">${escapeHtml(typeof text === 'string' ? text : (text.extractedText||JSON.stringify(text)))}</div>
+      </div>`;
+  }
+
+  if (mode === 'ask') {
+    return `
+      <div class="result-box show">
+        <div class="field-label" style="color:var(--text3);font-family:'DM Mono',monospace;font-size:10px;margin-bottom:8px">ANSWER</div>
+        ${escapeHtml(data.answer||data.Answer||JSON.stringify(data))}
+      </div>`;
+  }
+
+  if (mode === 'extract-invoice') {
+    const items = data.lineItems || data.LineItems || [];
+    const rows = items.map(item => `
+      <tr>
+        <td>${escapeHtml(item.description||item.Description||'')}</td>
+        <td style="text-align:right">${item.quantity||item.Quantity||0}</td>
+        <td style="text-align:right">₹${(item.unitPrice||item.UnitPrice||0).toLocaleString()}</td>
+        <td style="text-align:right">₹${(item.total||item.Total||0).toLocaleString()}</td>
+      </tr>`).join('');
+
+    return `
+      <div class="result-box show">
+        <div class="analysis-grid" style="margin-bottom:12px">
+          <div class="analysis-field"><div class="field-label">VENDOR</div><div class="field-value">${escapeHtml(data.vendorName||data.VendorName||'—')}</div></div>
+          <div class="analysis-field"><div class="field-label">INVOICE NO.</div><div class="field-value">${escapeHtml(data.invoiceNumber||data.InvoiceNumber||'—')}</div></div>
+          <div class="analysis-field"><div class="field-label">DATE</div><div class="field-value">${escapeHtml(data.invoiceDate||data.InvoiceDate||'—')}</div></div>
+          <div class="analysis-field"><div class="field-label">CURRENCY</div><div class="field-value">${escapeHtml(data.currency||data.Currency||'INR')}</div></div>
+        </div>
+        ${rows ? `
+        <table class="invoice-table">
+          <thead><tr><th>Item</th><th style="text-align:right">Qty</th><th style="text-align:right">Unit Price</th><th style="text-align:right">Total</th></tr></thead>
+          <tbody>
+            ${rows}
+            <tr class="total-row">
+              <td colspan="3">Subtotal</td><td style="text-align:right">₹${(data.subtotal||data.Subtotal||0).toLocaleString()}</td>
+            </tr>
+            <tr class="total-row">
+              <td colspan="3">Tax</td><td style="text-align:right">₹${(data.taxAmount||data.TaxAmount||0).toLocaleString()}</td>
+            </tr>
+            <tr class="total-row" style="background:var(--golddim)">
+              <td colspan="3" style="color:var(--gold)"><strong>Total</strong></td>
+              <td style="text-align:right;color:var(--gold)"><strong>₹${(data.totalAmount||data.TotalAmount||0).toLocaleString()}</strong></td>
+            </tr>
+          </tbody>
+        </table>` : '<div style="color:var(--text3)">No line items detected.</div>'}
+        ${data.notes||data.Notes ? `<div style="margin-top:10px;font-size:12px;color:var(--text3)">${escapeHtml(data.notes||data.Notes)}</div>` : ''}
+      </div>`;
+  }
+
+  return `<div class="result-box show"><pre class="json-display">${JSON.stringify(data, null, 2)}</pre></div>`;
+}
+
+// ── CHAT HELPERS ──
+let msgCounter = 0;
+function appendMsg(containerId, type, text, avatar) {
+  const id = 'msg-' + (++msgCounter);
+  const container = document.getElementById(containerId);
+  const div = document.createElement('div');
+  div.className = `msg ${type}`;
+  div.id = id;
+  div.innerHTML = `
+    <div class="msg-avatar">${avatar||'🤖'}</div>
+    <div class="msg-bubble">${escapeHtml(text)}</div>`;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+  return id;
+}
+
+function updateMsg(id, text, type='ai') {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.className = `msg ${type}`;
+  el.querySelector('.msg-bubble').textContent = text;
+  el.closest('.chat-messages').scrollTop = 99999;
+}
+
+// ── UTILS ──
+function escapeHtml(str) {
+  if (typeof str !== 'string') return String(str||'');
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+const sessions = {};
+function getSessionId(key) {
+  if (!sessions[key]) sessions[key] = Math.random().toString(36).slice(2,9);
+  return sessions[key];
+}
+
+// Auto-resize textareas
+document.querySelectorAll('textarea').forEach(ta => {
+  ta.addEventListener('input', () => {
+    ta.style.height = 'auto';
+    ta.style.height = Math.min(ta.scrollHeight, 120) + 'px';
+  });
+});
+</script>
+
+</body>
+</html>
