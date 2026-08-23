@@ -116,6 +116,7 @@ header {
 .pill[data-app="4"].active  { background:var(--tealdim); border-color:var(--teal); color:var(--teal); }
 .pill[data-app="5"].active  { background:var(--golddim); border-color:var(--gold); color:var(--gold); }
 .pill[data-app="6"].active  { background:var(--coraldim); border-color:var(--coral); color:var(--coral); }
+.pill[data-app="7"].active  { background:var(--tealdim); border-color:var(--teal); color:var(--teal); }
 
 /* ── APP PANELS ── */
 .app-panel { display:none; animation: fadeUp .3s ease; }
@@ -408,6 +409,7 @@ header {
       <button class="pill" data-app="4" onclick="switchApp(4)">App 4 — PDF Q&A</button>
       <button class="pill" data-app="5" onclick="switchApp(5)">App 5 — AI Agent</button>
       <button class="pill" data-app="6" onclick="switchApp(6)">App 6 — Image AI</button>
+      <button class="pill" data-app="7" onclick="switchApp(7)">App 7 — Voice AI</button>
     </div>
   </div>
 
@@ -547,6 +549,114 @@ header {
     </div>
   </div>
 
+  <!-- ══ APP 7 — VOICE AI ══ -->
+<div class="app-panel" id="panel-7">
+  <div class="panel-header">
+    <div class="panel-icon" style="background:var(--tealdim); color:var(--teal)">🎤</div>
+    <div class="panel-meta">
+      <div class="panel-name" style="color:var(--teal)">Voice AI Pipeline</div>
+      <div class="panel-desc">Speak → Whisper transcribes → GPT-4o-mini answers → TTS speaks back · Full audio pipeline in .NET</div>
+    </div>
+  </div>
+  <div class="panel-body">
+
+    <!-- Voice selector -->
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
+      <label style="font-size:13px; color:var(--text2);">AI Voice:</label>
+      <select id="voice-select" style="background:var(--lift); border:1px solid var(--border2); color:var(--text); padding:6px 12px; border-radius:var(--r-sm); font-size:13px; font-family:'DM Sans',sans-serif; outline:none;">
+        <option value="nova">Nova — warm &amp; conversational</option>
+        <option value="alloy">Alloy — neutral &amp; clear</option>
+        <option value="shimmer">Shimmer — soft &amp; gentle</option>
+        <option value="onyx">Onyx — deep &amp; authoritative</option>
+        <option value="echo">Echo — professional</option>
+        <option value="fable">Fable — British accent</option>
+      </select>
+    </div>
+
+    <!-- Mode tabs -->
+    <div class="analysis-tabs" style="margin-bottom:20px;">
+      <button class="atab active" style="border-color:var(--teal); background:var(--tealdim); color:var(--teal);" data-vmode="record" onclick="setVoiceMode('record')">🎙️ Record from Browser</button>
+      <button class="atab" data-vmode="upload" onclick="setVoiceMode('upload')">📁 Upload Audio File</button>
+      <button class="atab" data-vmode="tts" onclick="setVoiceMode('tts')">🔊 Text to Speech</button>
+    </div>
+
+    <!-- RECORD MODE -->
+    <div id="voice-record-mode">
+      <div style="text-align:center; padding:32px 0;">
+        <div id="record-btn-wrap">
+          <button id="record-btn" onclick="toggleRecording()"
+            style="width:80px; height:80px; border-radius:50%; border:3px solid var(--teal);
+                   background:var(--tealdim); color:var(--teal); font-size:28px;
+                   cursor:pointer; transition:all .2s; display:flex; align-items:center;
+                   justify-content:center; margin:0 auto 16px;">
+            🎤
+          </button>
+          <div id="record-status" style="font-size:14px; color:var(--text2);">Click to start recording</div>
+          <div id="record-timer" style="font-size:24px; font-family:'DM Mono',monospace; color:var(--teal); margin-top:8px; display:none;">0:00</div>
+        </div>
+      </div>
+      <p class="hint" style="text-align:center;">
+        Try saying: <strong>"What is RAG?"</strong> · <strong>"Explain AI agents simply"</strong> · <strong>"What is Semantic Kernel?"</strong>
+      </p>
+    </div>
+
+    <!-- UPLOAD MODE -->
+    <div id="voice-upload-mode" style="display:none;">
+      <div class="upload-zone" onclick="document.getElementById('audioFileInput').click()"
+        style="border-color:var(--border2); margin-bottom:16px;">
+        <div class="upload-icon">🎵</div>
+        <div class="upload-text"><strong>Click to upload audio</strong></div>
+        <div class="upload-sub">MP3, WAV, WebM, M4A, OGG · Max 25MB</div>
+      </div>
+      <input type="file" id="audioFileInput" accept="audio/*,.webm,.ogg,.wav,.mp3,.m4a" style="display:none" onchange="handleAudioUpload(event)">
+      <button class="btn-send" id="upload-ask-btn" disabled onclick="sendUploadedAudio()"
+        style="background:var(--teal); color:#000; margin-bottom:16px;">
+        Send to AI
+      </button>
+    </div>
+
+    <!-- TTS MODE -->
+    <div id="voice-tts-mode" style="display:none;">
+      <textarea class="chat-input" id="tts-text" placeholder="Type any text and hear the AI speak it..."
+        style="width:100%; height:100px; margin-bottom:12px; resize:vertical;"></textarea>
+      <button class="btn-send" onclick="convertTextToSpeech()"
+        style="background:var(--teal); color:#000; margin-bottom:16px;">
+        Generate Speech
+      </button>
+    </div>
+
+    <!-- RESULTS -->
+    <div id="voice-result" style="display:none;">
+
+      <!-- Transcript -->
+      <div id="voice-transcript-box" style="display:none; margin-bottom:12px;">
+        <div style="font-size:11px; font-family:'DM Mono',monospace; color:var(--text3); margin-bottom:6px; letter-spacing:.06em;">YOU SAID</div>
+        <div id="voice-transcript-text" style="background:var(--lift); border:1px solid var(--border); border-radius:var(--r-sm); padding:12px 14px; font-size:14px; color:var(--text); line-height:1.6;"></div>
+      </div>
+
+      <!-- AI Answer Text -->
+      <div id="voice-answer-box" style="display:none; margin-bottom:12px;">
+        <div style="font-size:11px; font-family:'DM Mono',monospace; color:var(--text3); margin-bottom:6px; letter-spacing:.06em;">AI ANSWERED</div>
+        <div id="voice-answer-text" style="background:var(--lift); border:1px solid var(--border); border-left:3px solid var(--teal); border-radius:var(--r-sm); padding:12px 14px; font-size:14px; color:var(--text); line-height:1.6;"></div>
+      </div>
+
+      <!-- Audio Player -->
+      <div id="voice-audio-box" style="display:none;">
+        <div style="font-size:11px; font-family:'DM Mono',monospace; color:var(--text3); margin-bottom:6px; letter-spacing:.06em;">LISTEN TO AI RESPONSE</div>
+        <audio id="voice-audio-player" controls style="width:100%; height:44px; border-radius:var(--r-sm);"></audio>
+      </div>
+
+      <!-- Processing indicator -->
+      <div id="voice-loading" style="display:none; padding:20px; text-align:center;">
+        <div class="spinner" style="margin:0 auto 10px;"></div>
+        <div id="voice-loading-text" style="font-size:13px; color:var(--text2);">Processing...</div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
   <!-- BOTTOM LINKS -->
   <div style="text-align:center; padding:48px 0 32px; border-top:1px solid var(--border); margin-top:40px;">
     <p style="font-size:13px; color:var(--text3); margin-bottom:16px;">
@@ -567,7 +677,8 @@ const URLS = {
   app3: 'https://aiapp3-himanshu-h8e3c0bfhbbjfbhr.centralindia-01.azurewebsites.net',
   app4: 'https://aiapp4rag-himanshu-hnggcnckgkepecce.centralindia-01.azurewebsites.net',
   app5: 'https://aiapp5agents-himanshu-azfkh9akauecdtg8.centralindia-01.azurewebsites.net',
-  app6: 'https://aiapp6multimodalvision-eab0hkbfc6bjgeca.centralindia-01.azurewebsites.net'
+  app6: 'https://aiapp6multimodalvision-eab0hkbfc6bjgeca.centralindia-01.azurewebsites.net',
+  app7: 'https://aiapp7voice-himanshu-bzgwg5d9azd0bbg2.centralindia-01.azurewebsites.net'
 };
 
 // ── STATE ──
@@ -941,6 +1052,234 @@ document.querySelectorAll('textarea').forEach(ta => {
     ta.style.height = Math.min(ta.scrollHeight, 120) + 'px';
   });
 });
+
+// ══ APP 7 — VOICE AI ══
+let mediaRecorder = null;
+let audioChunks = [];
+let isRecording = false;
+let recordTimer = null;
+let recordSeconds = 0;
+let uploadedAudioFile = null;
+let currentVoiceMode = 'record';
+
+function setVoiceMode(mode) {
+  currentVoiceMode = mode;
+  document.querySelectorAll('[data-vmode]').forEach(t => {
+    const isActive = t.dataset.vmode === mode;
+    t.classList.toggle('active', isActive);
+    if (isActive) {
+      t.style.borderColor = 'var(--teal)';
+      t.style.background = 'var(--tealdim)';
+      t.style.color = 'var(--teal)';
+    } else {
+      t.style.borderColor = '';
+      t.style.background = '';
+      t.style.color = '';
+    }
+  });
+  document.getElementById('voice-record-mode').style.display = mode === 'record' ? 'block' : 'none';
+  document.getElementById('voice-upload-mode').style.display = mode === 'upload' ? 'block' : 'none';
+  document.getElementById('voice-tts-mode').style.display = mode === 'tts' ? 'block' : 'none';
+  document.getElementById('voice-result').style.display = 'none';
+}
+
+async function toggleRecording() {
+  if (!isRecording) {
+    await startRecording();
+  } else {
+    stopRecording();
+  }
+}
+
+async function startRecording() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    mediaRecorder = new MediaRecorder(stream);
+    audioChunks = [];
+    isRecording = true;
+
+    mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
+    mediaRecorder.onstop = async () => {
+      const blob = new Blob(audioChunks, { type: 'audio/webm' });
+      stream.getTracks().forEach(t => t.stop());
+      await sendAudioToVoiceAPI(blob, 'recording.webm');
+    };
+
+    mediaRecorder.start(100);
+
+    // Update UI
+    const btn = document.getElementById('record-btn');
+    btn.textContent = '⏹️';
+    btn.style.borderColor = 'var(--coral)';
+    btn.style.background = 'var(--coraldim)';
+    btn.style.color = 'var(--coral)';
+    btn.style.animation = 'pulse 1s ease-in-out infinite';
+    document.getElementById('record-status').textContent = 'Recording... click to stop';
+    document.getElementById('record-status').style.color = 'var(--coral)';
+    document.getElementById('record-timer').style.display = 'block';
+
+    // Timer
+    recordSeconds = 0;
+    recordTimer = setInterval(() => {
+      recordSeconds++;
+      const m = Math.floor(recordSeconds / 60);
+      const s = recordSeconds % 60;
+      document.getElementById('record-timer').textContent = `${m}:${s.toString().padStart(2,'0')}`;
+      if (recordSeconds >= 60) stopRecording(); // max 60 seconds
+    }, 1000);
+
+  } catch(e) {
+    document.getElementById('record-status').textContent = '⚠️ Microphone access denied. Please allow microphone access and try again.';
+    document.getElementById('record-status').style.color = 'var(--coral)';
+  }
+}
+
+function stopRecording() {
+  if (mediaRecorder && isRecording) {
+    mediaRecorder.stop();
+    isRecording = false;
+    clearInterval(recordTimer);
+
+    const btn = document.getElementById('record-btn');
+    btn.textContent = '🎤';
+    btn.style.borderColor = 'var(--teal)';
+    btn.style.background = 'var(--tealdim)';
+    btn.style.color = 'var(--teal)';
+    btn.style.animation = '';
+    document.getElementById('record-status').textContent = 'Processing your voice...';
+    document.getElementById('record-status').style.color = 'var(--text2)';
+    document.getElementById('record-timer').style.display = 'none';
+  }
+}
+
+function handleAudioUpload(e) {
+  uploadedAudioFile = e.target.files[0];
+  if (uploadedAudioFile) {
+    document.getElementById('upload-ask-btn').disabled = false;
+    document.getElementById('upload-ask-btn').textContent = `Send "${uploadedAudioFile.name}" to AI`;
+  }
+}
+
+async function sendUploadedAudio() {
+  if (!uploadedAudioFile) return;
+  await sendAudioToVoiceAPI(uploadedAudioFile, uploadedAudioFile.name);
+}
+
+async function sendAudioToVoiceAPI(audioBlob, fileName) {
+  const voice = document.getElementById('voice-select').value;
+
+  // Show result area with loading
+  const resultEl = document.getElementById('voice-result');
+  resultEl.style.display = 'block';
+  document.getElementById('voice-transcript-box').style.display = 'none';
+  document.getElementById('voice-answer-box').style.display = 'none';
+  document.getElementById('voice-audio-box').style.display = 'none';
+  document.getElementById('voice-loading').style.display = 'block';
+  document.getElementById('voice-loading-text').textContent = 'Stage 1: Whisper is transcribing your audio...';
+
+  try {
+    const formData = new FormData();
+    formData.append('audio', audioBlob, fileName);
+    formData.append('voice', voice);
+
+    const res = await fetch(`${URLS.app7}/api/voice/ask`, {
+      method: 'POST',
+      body: formData
+    });
+
+    document.getElementById('voice-loading-text').textContent = 'Stage 2 & 3: AI is generating and speaking the answer...';
+
+    const data = await res.json();
+
+    // Hide loading
+    document.getElementById('voice-loading').style.display = 'none';
+
+    // Show transcript
+    if (data.userTranscript) {
+      document.getElementById('voice-transcript-text').textContent = data.userTranscript;
+      document.getElementById('voice-transcript-box').style.display = 'block';
+    }
+
+    // Show answer text
+    if (data.answer) {
+      document.getElementById('voice-answer-text').textContent = data.answer;
+      document.getElementById('voice-answer-box').style.display = 'block';
+    }
+
+    // Play audio response
+    if (data.answerAudioBase64) {
+      const audioSrc = `data:audio/${data.audioFormat || 'mp3'};base64,${data.answerAudioBase64}`;
+      const player = document.getElementById('voice-audio-player');
+      player.src = audioSrc;
+      document.getElementById('voice-audio-box').style.display = 'block';
+      player.play().catch(() => {}); // autoplay may be blocked — that's fine
+    }
+
+    // Reset record button text
+    document.getElementById('record-status').textContent = 'Click to record again';
+
+  } catch(e) {
+    document.getElementById('voice-loading').style.display = 'none';
+    document.getElementById('voice-transcript-box').style.display = 'block';
+    document.getElementById('voice-transcript-text').textContent = `⚠️ Error: ${e.message}. The Azure app may be sleeping — try again in 30 seconds.`;
+    document.getElementById('record-status').textContent = 'Click to record again';
+  }
+}
+
+async function convertTextToSpeech() {
+  const text = document.getElementById('tts-text').value.trim();
+  if (!text) return;
+
+  const voice = document.getElementById('voice-select').value;
+  const resultEl = document.getElementById('voice-result');
+  resultEl.style.display = 'block';
+  document.getElementById('voice-transcript-box').style.display = 'none';
+  document.getElementById('voice-answer-box').style.display = 'none';
+  document.getElementById('voice-audio-box').style.display = 'none';
+  document.getElementById('voice-loading').style.display = 'block';
+  document.getElementById('voice-loading-text').textContent = 'Generating speech...';
+
+  try {
+    const res = await fetch(`${URLS.app7}/api/voice/speak`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text, voice })
+    });
+
+    const data = await res.json();
+    document.getElementById('voice-loading').style.display = 'none';
+
+    if (data.audioBase64) {
+      const audioSrc = `data:audio/mp3;base64,${data.audioBase64}`;
+      const player = document.getElementById('voice-audio-player');
+      player.src = audioSrc;
+      document.getElementById('voice-audio-box').style.display = 'block';
+      player.play().catch(() => {});
+    }
+  } catch(e) {
+    document.getElementById('voice-loading').style.display = 'none';
+    alert(`Error: ${e.message}`);
+  }
+}
+
+function handleHashNavigation() {
+  const hash = window.location.hash; // e.g. "#app4"
+  if (!hash) return; // no hash — default App 3 stays selected
+
+  const appNum = hash.replace('#app', ''); // "4"
+  const validApps = ['3', '4', '5', '6', '7'];
+
+  if (validApps.includes(appNum)) {
+    switchApp(parseInt(appNum));
+  }
+}
+
+// Run on page load
+window.addEventListener('load', handleHashNavigation);
+
+// Also run if user navigates back/forward in browser
+window.addEventListener('hashchange', handleHashNavigation);
+
 </script>
 
 </body>
