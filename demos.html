@@ -117,6 +117,7 @@ header {
 .pill[data-app="5"].active  { background:var(--golddim); border-color:var(--gold); color:var(--gold); }
 .pill[data-app="6"].active  { background:var(--coraldim); border-color:var(--coral); color:var(--coral); }
 .pill[data-app="7"].active  { background:var(--tealdim); border-color:var(--teal); color:var(--teal); }
+.pill[data-app="75"].active { background:var(--bluedim); border-color:var(--blue); color:var(--blue); }
 
 /* ── APP PANELS ── */
 .app-panel { display:none; animation: fadeUp .3s ease; }
@@ -382,6 +383,30 @@ header {
   .panel-header { padding:18px; }
   .panel-body { padding:18px; }
 }
+
+/* ── AGENT LANES (App 7.5) ── */
+.agent-lanes { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-bottom:16px; }
+.agent-lane {
+  background:var(--lift); border:1px solid var(--border);
+  border-radius:var(--r-sm); padding:14px; min-height:180px;
+  display:flex; flex-direction:column;
+}
+.agent-lane-header {
+  display:flex; align-items:center; justify-content:space-between;
+  font-family:'DM Mono',monospace; font-size:12px; font-weight:500; margin-bottom:10px;
+}
+.agent-lane-status { display:flex; align-items:center; gap:6px; color:var(--text3); font-size:11px; }
+.agent-dot { width:6px; height:6px; border-radius:50%; background:var(--border2); }
+.agent-lane[data-state="active"] .agent-dot { animation:pulse 1.1s ease-in-out infinite; }
+.agent-lane[data-role="researcher"][data-state="active"] .agent-dot { background:var(--teal); }
+.agent-lane[data-role="critic"][data-state="active"] .agent-dot { background:var(--coral); }
+.agent-lane[data-role="synthesizer"][data-state="active"] .agent-dot { background:var(--purple); }
+.agent-lane[data-state="done"] .agent-dot { background:var(--text3); }
+.agent-lane-body { font-size:13px; line-height:1.6; color:var(--text); white-space:pre-wrap; }
+.agent-lane-body:empty::before { content:attr(data-placeholder); color:var(--text3); }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.4;transform:scale(.7);} }
+@media (max-width:640px) { .agent-lanes { grid-template-columns:1fr; } }
+
 </style>
 </head>
 <body>
@@ -410,6 +435,7 @@ header {
       <button class="pill" data-app="5" onclick="switchApp(5)">App 5 — AI Agent</button>
       <button class="pill" data-app="6" onclick="switchApp(6)">App 6 — Image AI</button>
       <button class="pill" data-app="7" onclick="switchApp(7)">App 7 — Voice AI</button>
+      <button class="pill" data-app="75" onclick="switchApp(75)">App 7.5 — Multi-Agent</button>
     </div>
   </div>
 
@@ -657,6 +683,49 @@ header {
   </div>
 </div>
 
+<!-- ══ APP 7.5 — MULTI-AGENT REASONING ══ -->
+<div class="app-panel" id="panel-75">
+  <div class="panel-header">
+    <div class="panel-icon" style="background:var(--bluedim); color:var(--blue)">🧠</div>
+    <div class="panel-meta">
+      <div class="panel-name" style="color:var(--blue)">Live Multi-Agent Reasoning</div>
+      <div class="panel-desc">Researcher → Critic → Synthesizer reason live, one after another · Watch the thinking, not just the answer</div>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div style="display:flex; gap:10px; margin-bottom:20px;">
+      <input type="text" class="chat-input" id="agent-question"
+        placeholder="Ask something the panel should reason through together..."
+        onkeydown="if(event.key==='Enter')askAgentPanel()">
+      <button class="btn-send" style="background:var(--blue); color:#000;" onclick="askAgentPanel()" id="agent-ask-btn">Ask the panel</button>
+    </div>
+    <div class="agent-lanes">
+      <div class="agent-lane" data-role="researcher" data-state="idle">
+        <div class="agent-lane-header">
+          <span style="color:var(--teal)">Researcher</span>
+          <span class="agent-lane-status"><span class="agent-dot"></span><span class="agent-status-text">Waiting</span></span>
+        </div>
+        <div class="agent-lane-body" id="agent-body-researcher" data-placeholder="Will gather the key facts and angles first."></div>
+      </div>
+      <div class="agent-lane" data-role="critic" data-state="idle">
+        <div class="agent-lane-header">
+          <span style="color:var(--coral)">Critic</span>
+          <span class="agent-lane-status"><span class="agent-dot"></span><span class="agent-status-text">Waiting</span></span>
+        </div>
+        <div class="agent-lane-body" id="agent-body-critic" data-placeholder="Will challenge the Researcher's findings next."></div>
+      </div>
+      <div class="agent-lane" data-role="synthesizer" data-state="idle">
+        <div class="agent-lane-header">
+          <span style="color:var(--purple)">Synthesizer</span>
+          <span class="agent-lane-status"><span class="agent-dot"></span><span class="agent-status-text">Waiting</span></span>
+        </div>
+        <div class="agent-lane-body" id="agent-body-synthesizer" data-placeholder="Will merge both into the final answer."></div>
+      </div>
+    </div>
+    <p class="hint">Try: <strong>"Should a startup build its own auth system or use a third-party provider?"</strong> · <strong>"Is remote work good for productivity?"</strong></p>
+  </div>
+</div>
+
   <!-- BOTTOM LINKS -->
   <div style="text-align:center; padding:48px 0 32px; border-top:1px solid var(--border); margin-top:40px;">
     <p style="font-size:13px; color:var(--text3); margin-bottom:16px;">
@@ -678,7 +747,8 @@ const URLS = {
   app4: 'https://aiapp4rag-himanshu-hnggcnckgkepecce.centralindia-01.azurewebsites.net',
   app5: 'https://aiapp5agents-himanshu-azfkh9akauecdtg8.centralindia-01.azurewebsites.net',
   app6: 'https://aiapp6multimodalvision-eab0hkbfc6bjgeca.centralindia-01.azurewebsites.net',
-  app7: 'https://aiapp7voice-himanshu-bzgwg5d9azd0bbg2.centralindia-01.azurewebsites.net'
+  app7: 'https://aiapp7voice-himanshu-bzgwg5d9azd0bbg2.centralindia-01.azurewebsites.net',
+  app75: 'https://aiapp7-5multiagent-cuard3affzdsa7dc.centralindia-01.azurewebsites.net'
 };
 
 // ── STATE ──
@@ -1262,12 +1332,83 @@ async function convertTextToSpeech() {
   }
 }
 
+// ══ APP 7.5 — MULTI-AGENT REASONING ══
+let agentConnection = null;
+
+function agentSetLaneState(role, state, text) {
+  const lane = document.querySelector(`.agent-lane[data-role="${role}"]`);
+  lane.dataset.state = state;
+  lane.querySelector('.agent-status-text').textContent = text;
+}
+
+async function ensureAgentConnection() {
+  if (agentConnection) return agentConnection;
+  agentConnection = new signalR.HubConnectionBuilder()
+    .withUrl(`${URLS.app75}/hubs/agent-reasoning`, { withCredentials: false })
+    .withAutomaticReconnect()
+    .build();
+
+  agentConnection.on('ReceiveAgentUpdate', (update) => {
+    const roleKey = update.role.toLowerCase();
+    const bodyEl = document.getElementById(`agent-body-${roleKey}`);
+    if (bodyEl) bodyEl.textContent = update.content;
+    agentSetLaneState(roleKey, 'done', 'Done');
+
+    const nextByStep = { 1: 'critic', 2: 'synthesizer', 3: null };
+    const next = nextByStep[update.step];
+    if (next) agentSetLaneState(next, 'active', 'Thinking');
+
+    if (update.isFinal) {
+      const btn = document.getElementById('agent-ask-btn');
+      btn.disabled = false;
+      btn.textContent = 'Ask the panel';
+    }
+  });
+
+  await agentConnection.start();
+  return agentConnection;
+}
+
+async function askAgentPanel() {
+  const input = document.getElementById('agent-question');
+  const question = input.value.trim();
+  if (!question) return;
+
+  const btn = document.getElementById('agent-ask-btn');
+  btn.disabled = true;
+  btn.textContent = 'Reasoning…';
+
+  ['researcher', 'critic', 'synthesizer'].forEach(role => {
+    document.getElementById(`agent-body-${role}`).textContent = '';
+    agentSetLaneState(role, 'idle', 'Waiting');
+  });
+  agentSetLaneState('researcher', 'active', 'Thinking');
+
+  try {
+    const conn = await ensureAgentConnection();
+    const sessionId = 'demo-web-' + Date.now();
+    await conn.invoke('JoinSession', sessionId);
+
+    const res = await fetch(`${URLS.app75}/api/agent/ask`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question, sessionId })
+    });
+    if (!res.ok) throw new Error('Request failed');
+  } catch (e) {
+    btn.disabled = false;
+    btn.textContent = 'Ask the panel';
+    ['researcher', 'critic', 'synthesizer'].forEach(role => agentSetLaneState(role, 'idle', 'Waiting'));
+    alert(`⚠️ Could not reach the API: ${e.message}. The Azure app may be sleeping — try again in 30 seconds.`);
+  }
+}
+
 function handleHashNavigation() {
   const hash = window.location.hash; // e.g. "#app4"
   if (!hash) return; // no hash — default App 3 stays selected
 
   const appNum = hash.replace('#app', ''); // "4"
-  const validApps = ['3', '4', '5', '6', '7'];
+  const validApps = ['3', '4', '5', '6', '7','75'];
 
   if (validApps.includes(appNum)) {
     switchApp(parseInt(appNum));
