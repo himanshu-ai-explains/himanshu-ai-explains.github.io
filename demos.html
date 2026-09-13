@@ -404,6 +404,12 @@ header {
 .agent-lane[data-state="done"] .agent-dot { background:var(--text3); }
 .agent-lane-body { font-size:13px; line-height:1.6; color:var(--text); white-space:pre-wrap; }
 .agent-lane-body:empty::before { content:attr(data-placeholder); color:var(--text3); }
+.example-chip {
+  font-family:'DM Sans',sans-serif; font-size:12px; padding:6px 12px;
+  border-radius:20px; border:1px solid var(--border2); background:transparent;
+  color:var(--text2); cursor:pointer; transition:all .15s;
+}
+.example-chip:hover { border-color:var(--blue); color:var(--blue); background:var(--bluedim); }
 @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.4;transform:scale(.7);} }
 @media (max-width:640px) { .agent-lanes { grid-template-columns:1fr; } }
 
@@ -694,6 +700,9 @@ header {
     </div>
   </div>
   <div class="panel-body">
+     <p style="font-size:13px; color:var(--text2); margin-bottom:16px; line-height:1.6;">
+      <strong style="color:var(--text);">Real use case:</strong> this is how AI decisions get an audit trail instead of a black box — one agent proposes, another challenges it, a third finalizes, and every step stays visible. It's the trust gap currently holding back autonomous agents in finance, legal, and compliance.
+     </p>
     <div style="display:flex; gap:10px; margin-bottom:20px;">
       <input type="text" class="chat-input" id="agent-question"
         placeholder="Ask something the panel should reason through together..."
