@@ -424,6 +424,8 @@ header {
   transition:all .2s; display:flex; align-items:center; justify-content:center; margin:0 auto 14px;
 }
 .vc-mic-btn.listening { background:var(--mint); color:#000; animation:vcPulse 1.2s ease-in-out infinite; }
+.vc-mic-btn.thinking { animation: vcThinkPulse 1s ease-in-out infinite; }
+@keyframes vcThinkPulse { 0%,100% { opacity: .4; } 50% { opacity: .9; } }
 .vc-mic-btn:disabled { opacity:.5; cursor:not-allowed; }
 @keyframes vcPulse { 0%,100%{box-shadow:0 0 0 0 rgba(52,211,153,.4);} 50%{box-shadow:0 0 0 14px rgba(52,211,153,0);} }
 .vc-status { font-size:13px; color:var(--text2); margin-bottom:4px; }
@@ -1483,7 +1485,6 @@ let vcIsProcessing = false;
 let vcFinalTranscript = '';
 let vcSilenceTimer = null;
 
-
 const VcSpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 let vcRecognition = null;
 if (VcSpeechRecognition) {
@@ -1492,53 +1493,32 @@ if (VcSpeechRecognition) {
   vcRecognition.interimResults = true;
   vcRecognition.lang = 'en-US';
 
-vcRecognition.onresult = (event) => {
-  vcFinalTranscript = '';
-  for (let i = 0; i < event.results.length; i++) {
-    vcFinalTranscript += event.results[i][0].transcript;
-  }
-  document.getElementById('vc-transcript-box').style.display = 'block';
-  document.getElementById('vc-transcript-text').textContent = vcFinalTranscript;
-
-  // Auto-stop: every time new speech comes in, push the deadline out 3s.
-  // If 3s pass with no new words, we treat that as "done talking" and
-  // stop listening automatically -- same code path as a manual click,
-  // since vcToggleMic() is what actually calls recognition.stop().
-  clearTimeout(vcSilenceTimer);
-  vcSilenceTimer = setTimeout(() => {
-    if (vcIsListening) vcToggleMic();
-  }, 3000);
-};
-
-  vcRecognition.onend = async () => {
-    if (!vcFinalTranscript.trim()) return;
-
-    document.getElementById('vc-status').textContent = 'Thinking…';
-    vcIsProcessing = true;
-    document.getElementById('vc-mic-btn').disabled = true;
-
-    try {
-      const conn = await vcEnsureConnection();
-      await conn.invoke('JoinSession', vcSessionId);
-
-      document.getElementById('vc-answer-box').style.display = 'block';
-      document.getElementById('vc-answer-text').textContent = '';
-
-      await fetch(`${URLS.app8}/api/voicechat/send`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionId: vcSessionId, userMessage: vcFinalTranscript })
-      });
-    } catch (e) {
-      vcIsProcessing = false;
-      document.getElementById('vc-mic-btn').disabled = false;
-      document.getElementById('vc-status').textContent = `⚠️ Could not reach the API: ${e.message}. The Azure app may be sleeping — try again in 30 seconds.`;
+  vcRecognition.onresult = (event) => {
+    vcFinalTranscript = '';
+    for (let i = 0; i < event.results.length; i++) {
+      vcFinalTranscript += event.results[i][0].transcript;
     }
+    document.getElementById('vc-transcript-box').style.display = 'block';
+    document.getElementById('vc-transcript-text').textContent = vcFinalTranscript;
+
+    clearTimeout(vcSilenceTimer);
+    vcSilenceTimer = setTimeout(() => {
+      if (vcIsListening) vcToggleMic();
+    }, 3000);
   };
 
+  // We no longer wait on 'end' to submit -- Chrome can take many seconds to
+  // fire it after stop()/abort() on a continuous session, which is what was
+  // causing the long dead pause. vcSubmitQuestion() below runs immediately
+  // instead. This stays as a harmless no-op safety net.
+  vcRecognition.onend = () => {};
+
   vcRecognition.onerror = (event) => {
+    if (event.error === 'aborted') return; // expected -- we call abort() ourselves
     vcIsProcessing = false;
-    document.getElementById('vc-mic-btn').disabled = false;
+    const btn = document.getElementById('vc-mic-btn');
+    btn.disabled = false;
+    btn.classList.remove('thinking');
     document.getElementById('vc-status').textContent = 'Error: ' + event.error;
   };
 } else {
@@ -1561,7 +1541,9 @@ async function vcEnsureConnection() {
     if (update.isFinal) {
       document.getElementById('vc-status').textContent = 'AI finished. Click the mic to talk again.';
       vcIsProcessing = false;
-      document.getElementById('vc-mic-btn').disabled = false;
+      const btn = document.getElementById('vc-mic-btn');
+      btn.disabled = false;
+      btn.classList.remove('thinking');
       return;
     }
     document.getElementById('vc-answer-text').textContent += update.textChunk;
@@ -1571,13 +1553,47 @@ async function vcEnsureConnection() {
   return vcConnection;
 }
 
+// NEW: the actual submit logic, now triggered directly by the stop click /
+// auto-stop timer instead of by recognition.onend -- this is what removes
+// the 17-second dead wait.
+function vcSubmitQuestion() {
+  if (!vcFinalTranscript.trim()) return;
+
+  document.getElementById('vc-status').textContent = 'Thinking…';
+  vcIsProcessing = true;
+  const btn = document.getElementById('vc-mic-btn');
+  btn.disabled = true;
+  btn.classList.add('thinking');
+
+  (async () => {
+    try {
+      const conn = await vcEnsureConnection();
+      await conn.invoke('JoinSession', vcSessionId);
+
+      document.getElementById('vc-answer-box').style.display = 'block';
+      document.getElementById('vc-answer-text').textContent = '';
+
+      await fetch(`${URLS.app8}/api/voicechat/send`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId: vcSessionId, userMessage: vcFinalTranscript })
+      });
+    } catch (e) {
+      vcIsProcessing = false;
+      btn.disabled = false;
+      btn.classList.remove('thinking');
+      document.getElementById('vc-status').textContent = `⚠️ Could not reach the API: ${e.message}. The Azure app may be sleeping — try again in 30 seconds.`;
+    }
+  })();
+}
+
 function vcToggleMic() {
   if (vcIsProcessing || !vcRecognition) return;
   const btn = document.getElementById('vc-mic-btn');
 
   if (!vcIsListening) {
     vcIsListening = true;
-    vcFinalTranscript = ''; // NEW: never let a stale answer leak into a new turn
+    vcFinalTranscript = '';
     btn.classList.add('listening');
     btn.textContent = '⏹';
     document.getElementById('vc-status').textContent = 'Listening… click again when done.';
@@ -1586,19 +1602,16 @@ function vcToggleMic() {
     try {
       vcRecognition.start();
     } catch (e) {
-      // Recognition was still shutting down from the previous turn --
-      // this is exactly the race that caused the "stuck listening" bug.
       vcIsListening = false;
       document.getElementById('vc-status').textContent = 'Please wait a moment and click the mic again.';
     }
   } else {
     vcIsListening = false;
-    vcIsProcessing = true;        // locks immediately, before onend fires
-    btn.disabled = true;          // visibly closes the double-click gap
     btn.classList.remove('listening');
     btn.textContent = '🎤';
     clearTimeout(vcSilenceTimer);
-    vcRecognition.stop();
+    vcRecognition.abort();   // don't wait for Chrome's slow finalization
+    vcSubmitQuestion();      // submit right away with what we already captured
   }
 }
 
