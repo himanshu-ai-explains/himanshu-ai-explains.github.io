@@ -1601,24 +1601,6 @@ function vcToggleMic() {
     vcRecognition.stop();
   }
 }
-  if (vcIsProcessing || !vcRecognition) return;
-  const btn = document.getElementById('vc-mic-btn');
-
-  if (!vcIsListening) {
-    vcIsListening = true;
-    btn.classList.add('listening');
-    btn.textContent = '⏹';
-    document.getElementById('vc-status').textContent = 'Listening… click again when done.';
-    document.getElementById('vc-transcript-box').style.display = 'none';
-    document.getElementById('vc-answer-box').style.display = 'none';
-    vcRecognition.start();
-  } else {
-    vcIsListening = false;
-    btn.classList.remove('listening');
-    btn.textContent = '🎤';
-    vcRecognition.stop();
-  }
-
 
 function vcResetConversation() {
   vcSessionId = crypto.randomUUID();
