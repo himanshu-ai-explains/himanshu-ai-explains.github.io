@@ -1481,6 +1481,8 @@ let vcSessionId = crypto.randomUUID();
 let vcIsListening = false;
 let vcIsProcessing = false;
 let vcFinalTranscript = '';
+let vcSilenceTimer = null;
+
 
 const VcSpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 let vcRecognition = null;
@@ -1490,14 +1492,23 @@ if (VcSpeechRecognition) {
   vcRecognition.interimResults = true;
   vcRecognition.lang = 'en-US';
 
-  vcRecognition.onresult = (event) => {
-    vcFinalTranscript = '';
-    for (let i = 0; i < event.results.length; i++) {
-      vcFinalTranscript += event.results[i][0].transcript;
-    }
-    document.getElementById('vc-transcript-box').style.display = 'block';
-    document.getElementById('vc-transcript-text').textContent = vcFinalTranscript;
-  };
+vcRecognition.onresult = (event) => {
+  vcFinalTranscript = '';
+  for (let i = 0; i < event.results.length; i++) {
+    vcFinalTranscript += event.results[i][0].transcript;
+  }
+  document.getElementById('vc-transcript-box').style.display = 'block';
+  document.getElementById('vc-transcript-text').textContent = vcFinalTranscript;
+
+  // Auto-stop: every time new speech comes in, push the deadline out 3s.
+  // If 3s pass with no new words, we treat that as "done talking" and
+  // stop listening automatically -- same code path as a manual click,
+  // since vcToggleMic() is what actually calls recognition.stop().
+  clearTimeout(vcSilenceTimer);
+  vcSilenceTimer = setTimeout(() => {
+    if (vcIsListening) vcToggleMic();
+  }, 3000);
+};
 
   vcRecognition.onend = async () => {
     if (!vcFinalTranscript.trim()) return;
@@ -1561,6 +1572,27 @@ async function vcEnsureConnection() {
 }
 
 function vcToggleMic() {
+  if (vcIsProcessing || !vcRecognition) return;
+  const btn = document.getElementById('vc-mic-btn');
+
+  if (!vcIsListening) {
+    vcIsListening = true;
+    btn.classList.add('listening');
+    btn.textContent = '⏹';
+    document.getElementById('vc-status').textContent = 'Listening… click again when done.';
+    document.getElementById('vc-transcript-box').style.display = 'none';
+    document.getElementById('vc-answer-box').style.display = 'none';
+    vcRecognition.start();
+  } else {
+    vcIsListening = false;
+    vcIsProcessing = true;   // NEW: lock immediately, don't wait for onend
+    btn.disabled = true;     // NEW: visibly closes the double-click gap
+    btn.classList.remove('listening');
+    btn.textContent = '🎤';
+    clearTimeout(vcSilenceTimer); // NEW: cancel any pending auto-stop
+    vcRecognition.stop();
+  }
+}
   if (vcIsProcessing || !vcRecognition) return;
   const btn = document.getElementById('vc-mic-btn');
 
