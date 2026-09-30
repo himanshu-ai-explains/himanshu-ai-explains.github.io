@@ -28,6 +28,8 @@
   --coraldim:   rgba(248,113,113,0.10);
   --purple:     #A78BFA;
   --purpledim:  rgba(167,139,250,0.10);
+  --mint:       #34D399;
+  --mintdim:    rgba(52,211,153,0.10);
   --r:          12px;
   --r-sm:       8px;
 }
@@ -118,6 +120,7 @@ header {
 .pill[data-app="6"].active  { background:var(--coraldim); border-color:var(--coral); color:var(--coral); }
 .pill[data-app="7"].active  { background:var(--tealdim); border-color:var(--teal); color:var(--teal); }
 .pill[data-app="75"].active { background:var(--bluedim); border-color:var(--blue); color:var(--blue); }
+.pill[data-app="8"].active { background:var(--mintdim); border-color:var(--mint); color:var(--mint); }
 
 /* ── APP PANELS ── */
 .app-panel { display:none; animation: fadeUp .3s ease; }
@@ -413,6 +416,27 @@ header {
 @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.4;transform:scale(.7);} }
 @media (max-width:640px) { .agent-lanes { grid-template-columns:1fr; } }
 
+/* ── VOICE COMPANION (App 8) ── */
+.vc-mic-wrap { text-align:center; padding:28px 0 20px; }
+.vc-mic-btn {
+  width:84px; height:84px; border-radius:50%; border:3px solid var(--mint);
+  background:var(--mintdim); color:var(--mint); font-size:30px; cursor:pointer;
+  transition:all .2s; display:flex; align-items:center; justify-content:center; margin:0 auto 14px;
+}
+.vc-mic-btn.listening { background:var(--mint); color:#000; animation:vcPulse 1.2s ease-in-out infinite; }
+.vc-mic-btn:disabled { opacity:.5; cursor:not-allowed; }
+@keyframes vcPulse { 0%,100%{box-shadow:0 0 0 0 rgba(52,211,153,.4);} 50%{box-shadow:0 0 0 14px rgba(52,211,153,0);} }
+.vc-status { font-size:13px; color:var(--text2); margin-bottom:4px; }
+.vc-reset-btn {
+  font-family:'DM Mono',monospace; font-size:11px; padding:5px 12px; border-radius:20px;
+  border:1px solid var(--border2); background:transparent; color:var(--text2); cursor:pointer;
+  margin-top:10px; transition:all .15s;
+}
+.vc-reset-btn:hover { border-color:var(--mint); color:var(--mint); }
+.vc-box { background:var(--lift); border:1px solid var(--border); border-radius:var(--r-sm); padding:12px 14px; font-size:14px; color:var(--text); line-height:1.6; min-height:24px; }
+.vc-box.answer { border-left:3px solid var(--mint); white-space:pre-wrap; }
+.vc-label { font-size:11px; font-family:'DM Mono',monospace; color:var(--text3); margin-bottom:6px; letter-spacing:.06em; }
+
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
 </head>
@@ -443,6 +467,7 @@ header {
       <button class="pill" data-app="6" onclick="switchApp(6)">App 6 — Image AI</button>
       <button class="pill" data-app="7" onclick="switchApp(7)">App 7 — Voice AI</button>
       <button class="pill" data-app="75" onclick="switchApp(75)">App 7.5 — Multi-Agent</button>
+      <button class="pill" data-app="8" onclick="switchApp(8)">App 8 — Voice Companion</button>
     </div>
   </div>
 
@@ -736,6 +761,42 @@ header {
   </div>
 </div>
 
+<!-- ══ APP 8 — LIVE VOICE COMPANION ══ -->
+<div class="app-panel" id="panel-8">
+  <div class="panel-header">
+    <div class="panel-icon" style="background:var(--mintdim); color:var(--mint)">🎙️</div>
+    <div class="panel-meta">
+      <div class="panel-name" style="color:var(--mint)">Live Voice Companion</div>
+      <div class="panel-desc">Push to talk, get a streamed answer back · Free browser speech-to-text + GPT-4o-mini over SignalR</div>
+    </div>
+  </div>
+  <div class="panel-body">
+    <p style="font-size:13px; color:var(--text2); margin-bottom:16px; line-height:1.6;">
+      <strong style="color:var(--text);">Real use case:</strong> an always-ready voice assistant pattern with zero per-minute transcription cost — speech-to-text runs free in your browser, GPT-4o-mini streams its answer back token by token instead of making you wait for the full response, and the conversation remembers context until you reset it. The pattern behind in-app voice support and hands-free assistants.
+    </p>
+
+    <div class="vc-mic-wrap">
+      <button class="vc-mic-btn" id="vc-mic-btn" onclick="vcToggleMic()">🎤</button>
+      <div class="vc-status" id="vc-status">Click the mic, ask a question, click again to send</div>
+      <button class="vc-reset-btn" id="vc-reset-btn" onclick="vcResetConversation()">🔄 New Conversation</button>
+    </div>
+
+    <div id="vc-transcript-box" style="display:none; margin-bottom:12px;">
+      <div class="vc-label">YOU SAID</div>
+      <div class="vc-box" id="vc-transcript-text"></div>
+    </div>
+
+    <div id="vc-answer-box" style="display:none;">
+      <div class="vc-label">AI ANSWERED</div>
+      <div class="vc-box answer" id="vc-answer-text"></div>
+    </div>
+
+    <p class="hint" style="text-align:center; margin-top:16px;">
+      Works in Chrome or Edge · Try: <strong>"What is Semantic Kernel?"</strong> · <strong>"Explain RAG in one sentence"</strong>
+    </p>
+  </div>
+</div>
+
   <!-- BOTTOM LINKS -->
   <div style="text-align:center; padding:48px 0 32px; border-top:1px solid var(--border); margin-top:40px;">
     <p style="font-size:13px; color:var(--text3); margin-bottom:16px;">
@@ -758,7 +819,8 @@ const URLS = {
   app5: 'https://aiapp5agents-himanshu-azfkh9akauecdtg8.centralindia-01.azurewebsites.net',
   app6: 'https://aiapp6multimodalvision-eab0hkbfc6bjgeca.centralindia-01.azurewebsites.net',
   app7: 'https://aiapp7voice-himanshu-bzgwg5d9azd0bbg2.centralindia-01.azurewebsites.net',
-  app75: 'https://aiapp7-5multiagent-cuard3affzdsa7dc.centralindia-01.azurewebsites.net'
+  app75: 'https://aiapp7-5multiagent-cuard3affzdsa7dc.centralindia-01.azurewebsites.net',
+  app8: 'https://aiapp8voicecompanion-himanshu-bucweya4hefub6hu.centralindia-01.azurewebsites.net/'
 };
 
 // ── STATE ──
@@ -1413,12 +1475,125 @@ async function askAgentPanel() {
   }
 }
 
+// ══ APP 8 — LIVE VOICE COMPANION ══
+let vcConnection = null;
+let vcSessionId = crypto.randomUUID();
+let vcIsListening = false;
+let vcIsProcessing = false;
+let vcFinalTranscript = '';
+
+const VcSpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+let vcRecognition = null;
+if (VcSpeechRecognition) {
+  vcRecognition = new VcSpeechRecognition();
+  vcRecognition.continuous = true;
+  vcRecognition.interimResults = true;
+  vcRecognition.lang = 'en-US';
+
+  vcRecognition.onresult = (event) => {
+    vcFinalTranscript = '';
+    for (let i = 0; i < event.results.length; i++) {
+      vcFinalTranscript += event.results[i][0].transcript;
+    }
+    document.getElementById('vc-transcript-box').style.display = 'block';
+    document.getElementById('vc-transcript-text').textContent = vcFinalTranscript;
+  };
+
+  vcRecognition.onend = async () => {
+    if (!vcFinalTranscript.trim()) return;
+
+    document.getElementById('vc-status').textContent = 'Thinking…';
+    vcIsProcessing = true;
+    document.getElementById('vc-mic-btn').disabled = true;
+
+    try {
+      const conn = await vcEnsureConnection();
+      await conn.invoke('JoinSession', vcSessionId);
+
+      document.getElementById('vc-answer-box').style.display = 'block';
+      document.getElementById('vc-answer-text').textContent = '';
+
+      await fetch(`${URLS.app8}/api/voicechat/send`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId: vcSessionId, userMessage: vcFinalTranscript })
+      });
+    } catch (e) {
+      vcIsProcessing = false;
+      document.getElementById('vc-mic-btn').disabled = false;
+      document.getElementById('vc-status').textContent = `⚠️ Could not reach the API: ${e.message}. The Azure app may be sleeping — try again in 30 seconds.`;
+    }
+  };
+
+  vcRecognition.onerror = (event) => {
+    vcIsProcessing = false;
+    document.getElementById('vc-mic-btn').disabled = false;
+    document.getElementById('vc-status').textContent = 'Error: ' + event.error;
+  };
+} else {
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('vc-mic-btn');
+    if (btn) btn.disabled = true;
+    const status = document.getElementById('vc-status');
+    if (status) status.textContent = 'Speech recognition not supported — use Chrome or Edge.';
+  });
+}
+
+async function vcEnsureConnection() {
+  if (vcConnection) return vcConnection;
+  vcConnection = new signalR.HubConnectionBuilder()
+    .withUrl(`${URLS.app8}/hubs/voice-chat`, { withCredentials: false })
+    .withAutomaticReconnect()
+    .build();
+
+  vcConnection.on('ReceiveChatChunk', (update) => {
+    if (update.isFinal) {
+      document.getElementById('vc-status').textContent = 'AI finished. Click the mic to talk again.';
+      vcIsProcessing = false;
+      document.getElementById('vc-mic-btn').disabled = false;
+      return;
+    }
+    document.getElementById('vc-answer-text').textContent += update.textChunk;
+  });
+
+  await vcConnection.start();
+  return vcConnection;
+}
+
+function vcToggleMic() {
+  if (vcIsProcessing || !vcRecognition) return;
+  const btn = document.getElementById('vc-mic-btn');
+
+  if (!vcIsListening) {
+    vcIsListening = true;
+    btn.classList.add('listening');
+    btn.textContent = '⏹';
+    document.getElementById('vc-status').textContent = 'Listening… click again when done.';
+    document.getElementById('vc-transcript-box').style.display = 'none';
+    document.getElementById('vc-answer-box').style.display = 'none';
+    vcRecognition.start();
+  } else {
+    vcIsListening = false;
+    btn.classList.remove('listening');
+    btn.textContent = '🎤';
+    vcRecognition.stop();
+  }
+}
+
+function vcResetConversation() {
+  vcSessionId = crypto.randomUUID();
+  vcFinalTranscript = '';
+  document.getElementById('vc-transcript-box').style.display = 'none';
+  document.getElementById('vc-answer-box').style.display = 'none';
+  document.getElementById('vc-status').textContent = 'New conversation started.';
+}
+
 function handleHashNavigation() {
   const hash = window.location.hash; // e.g. "#app4"
   if (!hash) return; // no hash — default App 3 stays selected
 
   const appNum = hash.replace('#app', ''); // "4"
-  const validApps = ['3', '4', '5', '6', '7','75'];
+  const validApps = ['3', '4', '5', '6', '7','75', '8'];
 
   if (validApps.includes(appNum)) {
     switchApp(parseInt(appNum));
