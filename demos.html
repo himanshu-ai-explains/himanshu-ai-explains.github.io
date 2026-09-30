@@ -1577,19 +1577,27 @@ function vcToggleMic() {
 
   if (!vcIsListening) {
     vcIsListening = true;
+    vcFinalTranscript = ''; // NEW: never let a stale answer leak into a new turn
     btn.classList.add('listening');
     btn.textContent = '⏹';
     document.getElementById('vc-status').textContent = 'Listening… click again when done.';
     document.getElementById('vc-transcript-box').style.display = 'none';
     document.getElementById('vc-answer-box').style.display = 'none';
-    vcRecognition.start();
+    try {
+      vcRecognition.start();
+    } catch (e) {
+      // Recognition was still shutting down from the previous turn --
+      // this is exactly the race that caused the "stuck listening" bug.
+      vcIsListening = false;
+      document.getElementById('vc-status').textContent = 'Please wait a moment and click the mic again.';
+    }
   } else {
     vcIsListening = false;
-    vcIsProcessing = true;   // NEW: lock immediately, don't wait for onend
-    btn.disabled = true;     // NEW: visibly closes the double-click gap
+    vcIsProcessing = true;        // locks immediately, before onend fires
+    btn.disabled = true;          // visibly closes the double-click gap
     btn.classList.remove('listening');
     btn.textContent = '🎤';
-    clearTimeout(vcSilenceTimer); // NEW: cancel any pending auto-stop
+    clearTimeout(vcSilenceTimer);
     vcRecognition.stop();
   }
 }
@@ -1610,7 +1618,7 @@ function vcToggleMic() {
     btn.textContent = '🎤';
     vcRecognition.stop();
   }
-}
+
 
 function vcResetConversation() {
   vcSessionId = crypto.randomUUID();
