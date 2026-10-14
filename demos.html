@@ -1,1086 +1,1697 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Himanshu's AI Apps — Live Demo</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-/* ── TOKENS ── */
-:root {
-  --ink:        #09090B;
-  --surface:    #111115;
-  --card:       #18181B;
-  --lift:       #27272A;
-  --border:     rgba(255,255,255,0.08);
-  --border2:    rgba(255,255,255,0.14);
-  --text:       #FAFAFA;
-  --text2:      #A1A1AA;
-  --text3:      #52525B;
-  --gold:       #EAB308;
-  --golddim:    rgba(234,179,8,0.10);
-  --teal:       #14B8A6;
-  --tealdim:    rgba(20,184,166,0.10);
-  --blue:       #60A5FA;
-  --bluedim:    rgba(96,165,250,0.10);
-  --coral:      #F87171;
-  --coraldim:   rgba(248,113,113,0.10);
-  --purple:     #A78BFA;
-  --purpledim:  rgba(167,139,250,0.10);
-  --mint:       #34D399;
-  --mintdim:    rgba(52,211,153,0.10);
-  --r:          12px;
-  --r-sm:       8px;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Himanshu's AI Apps — Live Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ── TOKENS ── */
+    :root {
+      --ink: #09090B;
+      --surface: #111115;
+      --card: #18181B;
+      --lift: #27272A;
+      --border: rgba(255, 255, 255, 0.08);
+      --border2: rgba(255, 255, 255, 0.14);
+      --text: #FAFAFA;
+      --text2: #A1A1AA;
+      --text3: #52525B;
+      --gold: #EAB308;
+      --golddim: rgba(234, 179, 8, 0.10);
+      --teal: #14B8A6;
+      --tealdim: rgba(20, 184, 166, 0.10);
+      --blue: #60A5FA;
+      --bluedim: rgba(96, 165, 250, 0.10);
+      --coral: #F87171;
+      --coraldim: rgba(248, 113, 113, 0.10);
+      --purple: #A78BFA;
+      --purpledim: rgba(167, 139, 250, 0.10);
+      --mint: #34D399;
+      --mintdim: rgba(52, 211, 153, 0.10);
+      --r: 12px;
+      --r-sm: 8px;
+    }
 
-*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
-html { scroll-behavior:smooth; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--ink);
-  color: var(--text);
-  min-height: 100vh;
-  font-size: 15px;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-}
+    html {
+      scroll-behavior: smooth;
+    }
 
-/* ── AMBIENT BACKGROUND ── */
-body::before {
-  content:'';
-  position:fixed; inset:0; pointer-events:none; z-index:0;
-  background:
-    radial-gradient(ellipse 80% 40% at 20% 0%, rgba(234,179,8,0.04) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(20,184,166,0.04) 0%, transparent 60%);
-}
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--ink);
+      color: var(--text);
+      min-height: 100vh;
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
 
-.wrap { position:relative; z-index:1; max-width:900px; margin:0 auto; padding:0 24px; }
+    /* ── AMBIENT BACKGROUND ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 40% at 20% 0%, rgba(234, 179, 8, 0.04) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(20, 184, 166, 0.04) 0%, transparent 60%);
+    }
 
-/* ── HEADER ── */
-header {
-  border-bottom: 1px solid var(--border);
-  padding: 20px 0;
-  position: sticky; top:0; z-index:100;
-  background: rgba(9,9,11,0.90);
-  backdrop-filter: blur(16px);
-}
-.header-inner {
-  display:flex; align-items:center; justify-content:space-between;
-}
-.logo {
-  font-family:'Syne',sans-serif;
-  font-size:14px; font-weight:700;
-  color:var(--gold); letter-spacing:.06em;
-  text-decoration:none;
-}
-.back-link {
-  font-size:13px; color:var(--text2);
-  text-decoration:none;
-  display:flex; align-items:center; gap:6px;
-  transition:color .15s;
-}
-.back-link:hover { color:var(--text); }
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
 
-/* ── HERO ── */
-.hero { padding: 56px 0 48px; text-align:center; }
-.hero-eyebrow {
-  font-family:'DM Mono',monospace;
-  font-size:11px; letter-spacing:.12em;
-  color:var(--text3); text-transform:uppercase;
-  margin-bottom:16px;
-}
-.hero h1 {
-  font-family:'Syne',sans-serif;
-  font-size:clamp(32px,5vw,52px);
-  font-weight:800; line-height:1.1;
-  margin-bottom:14px; letter-spacing:-.02em;
-}
-.hero h1 em { color:var(--gold); font-style:normal; }
-.hero-desc {
-  font-size:16px; color:var(--text2);
-  max-width:480px; margin:0 auto 28px;
-  line-height:1.7;
-}
-.app-pills {
-  display:flex; gap:8px; justify-content:center; flex-wrap:wrap;
-}
-.pill {
-  font-family:'DM Mono',monospace;
-  font-size:11px; padding:4px 12px; border-radius:20px;
-  font-weight:500; cursor:pointer; transition:all .15s;
-  border:1px solid var(--border2);
-  background:transparent; color:var(--text2);
-}
-.pill:hover, .pill.active { color:var(--text); }
-.pill[data-app="3"].active  { background:var(--purpledim); border-color:var(--purple); color:var(--purple); }
-.pill[data-app="4"].active  { background:var(--tealdim); border-color:var(--teal); color:var(--teal); }
-.pill[data-app="5"].active  { background:var(--golddim); border-color:var(--gold); color:var(--gold); }
-.pill[data-app="6"].active  { background:var(--coraldim); border-color:var(--coral); color:var(--coral); }
-.pill[data-app="7"].active  { background:var(--tealdim); border-color:var(--teal); color:var(--teal); }
-.pill[data-app="75"].active { background:var(--bluedim); border-color:var(--blue); color:var(--blue); }
-.pill[data-app="8"].active { background:var(--mintdim); border-color:var(--mint); color:var(--mint); }
+    /* ── HEADER ── */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 20px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(9, 9, 11, 0.90);
+      backdrop-filter: blur(16px);
+    }
 
-/* ── APP PANELS ── */
-.app-panel { display:none; animation: fadeUp .3s ease; }
-.app-panel.active { display:block; }
-@keyframes fadeUp {
-  from { opacity:0; transform:translateY(12px); }
-  to   { opacity:1; transform:translateY(0); }
-}
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
-.panel-header {
-  display:flex; align-items:flex-start; gap:14px;
-  padding:24px 28px; margin-bottom:0;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-bottom:none;
-  border-radius: var(--r) var(--r) 0 0;
-}
-.panel-icon {
-  width:44px; height:44px; border-radius:10px;
-  display:flex; align-items:center; justify-content:center;
-  font-size:20px; flex-shrink:0;
-}
-.panel-meta {}
-.panel-name {
-  font-family:'Syne',sans-serif;
-  font-size:17px; font-weight:700; margin-bottom:3px;
-}
-.panel-desc { font-size:13px; color:var(--text2); }
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: .06em;
+      text-decoration: none;
+    }
 
-.panel-body {
-  background:var(--card);
-  border:1px solid var(--border);
-  border-top:none;
-  border-radius: 0 0 var(--r) var(--r);
-  padding:28px;
-}
+    .back-link {
+      font-size: 13px;
+      color: var(--text2);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color .15s;
+    }
 
-/* ── CHAT UI (App 3 & 5) ── */
-.chat-messages {
-  min-height:280px; max-height:400px;
-  overflow-y:auto; margin-bottom:16px;
-  display:flex; flex-direction:column; gap:12px;
-  padding:4px 0;
-}
-.msg {
-  display:flex; gap:10px; align-items:flex-start;
-}
-.msg.user { flex-direction:row-reverse; }
-.msg-avatar {
-  width:30px; height:30px; border-radius:50%;
-  flex-shrink:0; display:flex; align-items:center;
-  justify-content:center; font-size:13px;
-  background:var(--lift);
-}
-.msg.user .msg-avatar { background:var(--gold); color:#000; }
-.msg-bubble {
-  max-width:75%; padding:10px 14px;
-  border-radius:var(--r-sm); font-size:14px;
-  line-height:1.6; color:var(--text);
-}
-.msg.ai .msg-bubble {
-  background:var(--lift);
-  border:1px solid var(--border);
-}
-.msg.user .msg-bubble {
-  background:var(--gold);
-  color:#000; font-weight:500;
-}
-.msg.system .msg-bubble {
-  background:transparent;
-  color:var(--text3); font-size:12px;
-  font-style:italic; border:none; padding:4px 0;
-}
-.msg.tools .msg-bubble {
-  background:var(--golddim);
-  border:1px solid rgba(234,179,8,0.2);
-  color:var(--gold); font-family:'DM Mono',monospace;
-  font-size:11px;
-}
+    .back-link:hover {
+      color: var(--text);
+    }
 
-.chat-input-row {
-  display:flex; gap:10px;
-}
-.chat-input {
-  flex:1; padding:10px 14px;
-  background:var(--lift); border:1px solid var(--border2);
-  border-radius:var(--r-sm); color:var(--text);
-  font-size:14px; font-family:'DM Sans',sans-serif;
-  outline:none; resize:none;
-  transition:border-color .15s;
-}
-.chat-input:focus { border-color:var(--text3); }
-.chat-input::placeholder { color:var(--text3); }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
 
-.btn-send {
-  padding:10px 20px; border-radius:var(--r-sm);
-  border:none; font-size:13px; font-weight:600;
-  cursor:pointer; transition:all .15s; white-space:nowrap;
-  font-family:'DM Sans',sans-serif;
-}
-.btn-gold  { background:var(--gold); color:#000; }
-.btn-gold:hover  { background:#FDE047; }
-.btn-teal  { background:var(--teal); color:#000; }
-.btn-teal:hover  { background:#2DD4BF; }
-.btn-coral { background:var(--coral); color:#000; }
-.btn-coral:hover { background:#FCA5A5; }
-.btn-purple{ background:var(--purple); color:#000; }
-.btn-purple:hover{ background:#C4B5FD; }
-.btn-send:disabled { opacity:.45; cursor:not-allowed; }
+    .book-link {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gold);
+      text-decoration: none;
+      border: 1px solid var(--gold);
+      padding: 6px 14px;
+      border-radius: 8px;
+      transition: all .2s;
+    }
 
-/* ── RAG UI (App 4) ── */
-.rag-step {
-  background:var(--lift); border:1px solid var(--border);
-  border-radius:var(--r-sm); padding:16px 18px; margin-bottom:12px;
-}
-.step-label {
-  font-family:'DM Mono',monospace;
-  font-size:11px; color:var(--text3);
-  letter-spacing:.08em; margin-bottom:8px;
-}
-.collection-tag {
-  display:inline-flex; align-items:center; gap:6px;
-  padding:4px 12px; border-radius:20px;
-  background:var(--tealdim); border:1px solid rgba(20,184,166,0.2);
-  color:var(--teal); font-family:'DM Mono',monospace;
-  font-size:12px; margin-top:8px;
-}
+    .book-link:hover {
+      background: var(--gold);
+      color: #000;
+    }
 
-/* ── VISION UI (App 6) ── */
-.upload-zone {
-  border:2px dashed var(--border2);
-  border-radius:var(--r); padding:40px 24px;
-  text-align:center; cursor:pointer;
-  transition:all .2s; position:relative;
-  margin-bottom:16px;
-}
-.upload-zone:hover, .upload-zone.drag-over {
-  border-color:var(--coral);
-  background:var(--coraldim);
-}
-.upload-icon { font-size:36px; margin-bottom:10px; opacity:.6; }
-.upload-text { font-size:14px; color:var(--text2); }
-.upload-text strong { color:var(--text); }
-.upload-sub { font-size:12px; color:var(--text3); margin-top:4px; }
-#fileInputApp6 { display:none; }
-.image-preview {
-  width:100%; max-height:240px;
-  object-fit:contain; border-radius:var(--r-sm);
-  border:1px solid var(--border);
-  margin-bottom:16px; display:none;
-}
-.analysis-tabs {
-  display:flex; gap:6px; margin-bottom:16px; flex-wrap:wrap;
-}
-.atab {
-  padding:6px 14px; border-radius:20px;
-  border:1px solid var(--border2);
-  font-size:12px; cursor:pointer;
-  background:transparent; color:var(--text2);
-  font-family:'DM Sans',sans-serif;
-  transition:all .15s;
-}
-.atab:hover { color:var(--text); }
-.atab.active { background:var(--coraldim); border-color:var(--coral); color:var(--coral); }
+    /* ── HERO ── */
+    .hero {
+      padding: 56px 0 48px;
+      text-align: center;
+    }
 
-/* ── RESULT BOX ── */
-.result-box {
-  background:var(--lift); border:1px solid var(--border);
-  border-radius:var(--r-sm); padding:16px;
-  font-size:13px; line-height:1.7;
-  min-height:80px; color:var(--text);
-  white-space:pre-wrap;
-  display:none;
-}
-.result-box.show { display:block; }
-.result-box.loading {
-  display:flex; align-items:center; gap:10px;
-  color:var(--text2);
-}
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .12em;
+      color: var(--text3);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
 
-.json-display {
-  font-family:'DM Mono',monospace;
-  font-size:12px; color:#94A3B8;
-  overflow-x:auto;
-}
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 14px;
+      letter-spacing: -.02em;
+    }
 
-/* ── STRUCTURED RESULTS ── */
-.analysis-grid {
-  display:grid; grid-template-columns:1fr 1fr;
-  gap:10px; margin-bottom:10px;
-}
-.analysis-field {
-  background:var(--ink); border-radius:var(--r-sm);
-  padding:10px 12px; border:1px solid var(--border);
-}
-.field-label { font-size:10px; color:var(--text3); font-family:'DM Mono',monospace; letter-spacing:.06em; margin-bottom:4px; }
-.field-value { font-size:13px; color:var(--text); }
+    .hero h1 em {
+      color: var(--gold);
+      font-style: normal;
+    }
 
-/* ── SPINNER ── */
-.spinner {
-  width:16px; height:16px; border-radius:50%;
-  border:2px solid var(--border2);
-  border-top-color:var(--gold);
-  animation:spin .7s linear infinite;
-  flex-shrink:0;
-}
-@keyframes spin { to { transform:rotate(360deg); } }
+    .hero-desc {
+      font-size: 16px;
+      color: var(--text2);
+      max-width: 480px;
+      margin: 0 auto 28px;
+      line-height: 1.7;
+    }
 
-/* ── MISC ── */
-.hint {
-  font-size:12px; color:var(--text3);
-  margin-top:10px; line-height:1.6;
-}
-.hint strong { color:var(--text2); }
-.tag-row { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
-.tag {
-  font-size:11px; padding:2px 8px; border-radius:4px;
-  background:var(--lift); border:1px solid var(--border);
-  color:var(--text2); font-family:'DM Mono',monospace;
-}
-.sources-box {
-  margin-top:12px; border-top:1px solid var(--border);
-  padding-top:12px;
-}
-.source-item {
-  font-size:12px; color:var(--text3);
-  padding:6px 0; border-bottom:1px solid var(--border);
-  display:flex; justify-content:space-between; align-items:center;
-}
-.source-item:last-child { border-bottom:none; }
-.score-badge {
-  font-family:'DM Mono',monospace; font-size:11px;
-  padding:2px 7px; border-radius:4px;
-  background:var(--tealdim); color:var(--teal);
-}
-.invoice-table {
-  width:100%; border-collapse:collapse; margin-top:8px;
-  font-size:13px;
-}
-.invoice-table th {
-  text-align:left; padding:6px 10px;
-  font-size:11px; font-family:'DM Mono',monospace;
-  color:var(--text3); font-weight:500;
-  border-bottom:1px solid var(--border);
-}
-.invoice-table td {
-  padding:7px 10px; border-bottom:1px solid var(--border);
-  color:var(--text2);
-}
-.invoice-table tr:last-child td { border-bottom:none; }
-.total-row td { color:var(--text); font-weight:500; }
+    .app-pills {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
 
-/* ── CONFIG NOTICE ── */
-.config-bar {
-  background:var(--golddim); border:1px solid rgba(234,179,8,0.2);
-  border-radius:var(--r-sm); padding:12px 16px;
-  font-size:13px; color:var(--gold); margin-bottom:20px;
-}
-.config-bar a { color:var(--gold); text-decoration:underline; }
+    .pill {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all .15s;
+      border: 1px solid var(--border2);
+      background: transparent;
+      color: var(--text2);
+    }
 
-@media (max-width:600px) {
-  .analysis-grid { grid-template-columns:1fr; }
-  .panel-header { padding:18px; }
-  .panel-body { padding:18px; }
-}
+    .pill:hover,
+    .pill.active {
+      color: var(--text);
+    }
 
-/* ── AGENT LANES (App 7.5) ── */
-.agent-lanes { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-bottom:16px; }
-.agent-lane {
-  background:var(--lift); border:1px solid var(--border);
-  border-radius:var(--r-sm); padding:14px; min-height:180px;
-  display:flex; flex-direction:column;
-}
-.agent-lane-header {
-  display:flex; align-items:center; justify-content:space-between;
-  font-family:'DM Mono',monospace; font-size:12px; font-weight:500; margin-bottom:10px;
-}
-.agent-lane-status { display:flex; align-items:center; gap:6px; color:var(--text3); font-size:11px; }
-.agent-dot { width:6px; height:6px; border-radius:50%; background:var(--border2); }
-.agent-lane[data-state="active"] .agent-dot { animation:pulse 1.1s ease-in-out infinite; }
-.agent-lane[data-role="researcher"][data-state="active"] .agent-dot { background:var(--teal); }
-.agent-lane[data-role="critic"][data-state="active"] .agent-dot { background:var(--coral); }
-.agent-lane[data-role="synthesizer"][data-state="active"] .agent-dot { background:var(--purple); }
-.agent-lane[data-state="done"] .agent-dot { background:var(--text3); }
-.agent-lane-body { font-size:13px; line-height:1.6; color:var(--text); white-space:pre-wrap; }
-.agent-lane-body:empty::before { content:attr(data-placeholder); color:var(--text3); }
-.example-chip {
-  font-family:'DM Sans',sans-serif; font-size:12px; padding:6px 12px;
-  border-radius:20px; border:1px solid var(--border2); background:transparent;
-  color:var(--text2); cursor:pointer; transition:all .15s;
-}
-.example-chip:hover { border-color:var(--blue); color:var(--blue); background:var(--bluedim); }
-@keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.4;transform:scale(.7);} }
-@media (max-width:640px) { .agent-lanes { grid-template-columns:1fr; } }
+    .pill[data-app="3"].active {
+      background: var(--purpledim);
+      border-color: var(--purple);
+      color: var(--purple);
+    }
 
-/* ── VOICE COMPANION (App 8) ── */
-.vc-mic-wrap { text-align:center; padding:28px 0 20px; }
-.vc-mic-btn {
-  width:84px; height:84px; border-radius:50%; border:3px solid var(--mint);
-  background:var(--mintdim); color:var(--mint); font-size:30px; cursor:pointer;
-  transition:all .2s; display:flex; align-items:center; justify-content:center; margin:0 auto 14px;
-}
-.vc-mic-btn.listening { background:var(--mint); color:#000; animation:vcPulse 1.2s ease-in-out infinite; }
-.vc-mic-btn.thinking { animation: vcThinkPulse 1s ease-in-out infinite; }
-@keyframes vcThinkPulse { 0%,100% { opacity: .4; } 50% { opacity: .9; } }
-.vc-mic-btn:disabled { opacity:.5; cursor:not-allowed; }
-@keyframes vcPulse { 0%,100%{box-shadow:0 0 0 0 rgba(52,211,153,.4);} 50%{box-shadow:0 0 0 14px rgba(52,211,153,0);} }
-.vc-status { font-size:13px; color:var(--text2); margin-bottom:4px; }
-.vc-reset-btn {
-  font-family:'DM Mono',monospace; font-size:11px; padding:5px 12px; border-radius:20px;
-  border:1px solid var(--border2); background:transparent; color:var(--text2); cursor:pointer;
-  margin-top:10px; transition:all .15s;
-}
-.vc-reset-btn:hover { border-color:var(--mint); color:var(--mint); }
-.vc-box { background:var(--lift); border:1px solid var(--border); border-radius:var(--r-sm); padding:12px 14px; font-size:14px; color:var(--text); line-height:1.6; min-height:24px; }
-.vc-box.answer { border-left:3px solid var(--mint); white-space:pre-wrap; }
-.vc-label { font-size:11px; font-family:'DM Mono',monospace; color:var(--text3); margin-bottom:6px; letter-spacing:.06em; }
+    .pill[data-app="4"].active {
+      background: var(--tealdim);
+      border-color: var(--teal);
+      color: var(--teal);
+    }
 
-</style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    .pill[data-app="5"].active {
+      background: var(--golddim);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .pill[data-app="6"].active {
+      background: var(--coraldim);
+      border-color: var(--coral);
+      color: var(--coral);
+    }
+
+    .pill[data-app="7"].active {
+      background: var(--tealdim);
+      border-color: var(--teal);
+      color: var(--teal);
+    }
+
+    .pill[data-app="75"].active {
+      background: var(--bluedim);
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+
+    .pill[data-app="8"].active {
+      background: var(--mintdim);
+      border-color: var(--mint);
+      color: var(--mint);
+    }
+
+    /* ── APP PANELS ── */
+    .app-panel {
+      display: none;
+      animation: fadeUp .3s ease;
+    }
+
+    .app-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 24px 28px;
+      margin-bottom: 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-bottom: none;
+      border-radius: var(--r) var(--r) 0 0;
+    }
+
+    .panel-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .panel-meta {}
+
+    .panel-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .panel-desc {
+      font-size: 13px;
+      color: var(--text2);
+    }
+
+    .panel-body {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 var(--r) var(--r);
+      padding: 28px;
+    }
+
+    /* ── CHAT UI (App 3 & 5) ── */
+    .chat-messages {
+      min-height: 280px;
+      max-height: 400px;
+      overflow-y: auto;
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 4px 0;
+    }
+
+    .msg {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .msg.user {
+      flex-direction: row-reverse;
+    }
+
+    .msg-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      background: var(--lift);
+    }
+
+    .msg.user .msg-avatar {
+      background: var(--gold);
+      color: #000;
+    }
+
+    .msg-bubble {
+      max-width: 75%;
+      padding: 10px 14px;
+      border-radius: var(--r-sm);
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text);
+    }
+
+    .msg.ai .msg-bubble {
+      background: var(--lift);
+      border: 1px solid var(--border);
+    }
+
+    .msg.user .msg-bubble {
+      background: var(--gold);
+      color: #000;
+      font-weight: 500;
+    }
+
+    .msg.system .msg-bubble {
+      background: transparent;
+      color: var(--text3);
+      font-size: 12px;
+      font-style: italic;
+      border: none;
+      padding: 4px 0;
+    }
+
+    .msg.tools .msg-bubble {
+      background: var(--golddim);
+      border: 1px solid rgba(234, 179, 8, 0.2);
+      color: var(--gold);
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+    }
+
+    .chat-input-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: 10px 14px;
+      background: var(--lift);
+      border: 1px solid var(--border2);
+      border-radius: var(--r-sm);
+      color: var(--text);
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+      resize: none;
+      transition: border-color .15s;
+    }
+
+    .chat-input:focus {
+      border-color: var(--text3);
+    }
+
+    .chat-input::placeholder {
+      color: var(--text3);
+    }
+
+    .btn-send {
+      padding: 10px 20px;
+      border-radius: var(--r-sm);
+      border: none;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .15s;
+      white-space: nowrap;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .btn-gold {
+      background: var(--gold);
+      color: #000;
+    }
+
+    .btn-gold:hover {
+      background: #FDE047;
+    }
+
+    .btn-teal {
+      background: var(--teal);
+      color: #000;
+    }
+
+    .btn-teal:hover {
+      background: #2DD4BF;
+    }
+
+    .btn-coral {
+      background: var(--coral);
+      color: #000;
+    }
+
+    .btn-coral:hover {
+      background: #FCA5A5;
+    }
+
+    .btn-purple {
+      background: var(--purple);
+      color: #000;
+    }
+
+    .btn-purple:hover {
+      background: #C4B5FD;
+    }
+
+    .btn-send:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+    }
+
+    /* ── RAG UI (App 4) ── */
+    .rag-step {
+      background: var(--lift);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 16px 18px;
+      margin-bottom: 12px;
+    }
+
+    .step-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--text3);
+      letter-spacing: .08em;
+      margin-bottom: 8px;
+    }
+
+    .collection-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: var(--tealdim);
+      border: 1px solid rgba(20, 184, 166, 0.2);
+      color: var(--teal);
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
+    /* ── VISION UI (App 6) ── */
+    .upload-zone {
+      border: 2px dashed var(--border2);
+      border-radius: var(--r);
+      padding: 40px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .2s;
+      position: relative;
+      margin-bottom: 16px;
+    }
+
+    .upload-zone:hover,
+    .upload-zone.drag-over {
+      border-color: var(--coral);
+      background: var(--coraldim);
+    }
+
+    .upload-icon {
+      font-size: 36px;
+      margin-bottom: 10px;
+      opacity: .6;
+    }
+
+    .upload-text {
+      font-size: 14px;
+      color: var(--text2);
+    }
+
+    .upload-text strong {
+      color: var(--text);
+    }
+
+    .upload-sub {
+      font-size: 12px;
+      color: var(--text3);
+      margin-top: 4px;
+    }
+
+    #fileInputApp6 {
+      display: none;
+    }
+
+    .image-preview {
+      width: 100%;
+      max-height: 240px;
+      object-fit: contain;
+      border-radius: var(--r-sm);
+      border: 1px solid var(--border);
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .analysis-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .atab {
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border2);
+      font-size: 12px;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text2);
+      font-family: 'DM Sans', sans-serif;
+      transition: all .15s;
+    }
+
+    .atab:hover {
+      color: var(--text);
+    }
+
+    .atab.active {
+      background: var(--coraldim);
+      border-color: var(--coral);
+      color: var(--coral);
+    }
+
+    /* ── RESULT BOX ── */
+    .result-box {
+      background: var(--lift);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 16px;
+      font-size: 13px;
+      line-height: 1.7;
+      min-height: 80px;
+      color: var(--text);
+      white-space: pre-wrap;
+      display: none;
+    }
+
+    .result-box.show {
+      display: block;
+    }
+
+    .result-box.loading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text2);
+    }
+
+    .json-display {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: #94A3B8;
+      overflow-x: auto;
+    }
+
+    /* ── STRUCTURED RESULTS ── */
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .analysis-field {
+      background: var(--ink);
+      border-radius: var(--r-sm);
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+    }
+
+    .field-label {
+      font-size: 10px;
+      color: var(--text3);
+      font-family: 'DM Mono', monospace;
+      letter-spacing: .06em;
+      margin-bottom: 4px;
+    }
+
+    .field-value {
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    /* ── SPINNER ── */
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid var(--border2);
+      border-top-color: var(--gold);
+      animation: spin .7s linear infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ── MISC ── */
+    .hint {
+      font-size: 12px;
+      color: var(--text3);
+      margin-top: 10px;
+      line-height: 1.6;
+    }
+
+    .hint strong {
+      color: var(--text2);
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .tag {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: var(--lift);
+      border: 1px solid var(--border);
+      color: var(--text2);
+      font-family: 'DM Mono', monospace;
+    }
+
+    .sources-box {
+      margin-top: 12px;
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+    }
+
+    .source-item {
+      font-size: 12px;
+      color: var(--text3);
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .source-item:last-child {
+      border-bottom: none;
+    }
+
+    .score-badge {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: var(--tealdim);
+      color: var(--teal);
+    }
+
+    .invoice-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+
+    .invoice-table th {
+      text-align: left;
+      padding: 6px 10px;
+      font-size: 11px;
+      font-family: 'DM Mono', monospace;
+      color: var(--text3);
+      font-weight: 500;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .invoice-table td {
+      padding: 7px 10px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text2);
+    }
+
+    .invoice-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .total-row td {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    /* ── CONFIG NOTICE ── */
+    .config-bar {
+      background: var(--golddim);
+      border: 1px solid rgba(234, 179, 8, 0.2);
+      border-radius: var(--r-sm);
+      padding: 12px 16px;
+      font-size: 13px;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    .config-bar a {
+      color: var(--gold);
+      text-decoration: underline;
+    }
+
+    @media (max-width:600px) {
+      .analysis-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .panel-header {
+        padding: 18px;
+      }
+
+      .panel-body {
+        padding: 18px;
+      }
+    }
+
+    /* ── AGENT LANES (App 7.5) ── */
+    .agent-lanes {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .agent-lane {
+      background: var(--lift);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 14px;
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .agent-lane-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+
+    .agent-lane-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text3);
+      font-size: 11px;
+    }
+
+    .agent-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--border2);
+    }
+
+    .agent-lane[data-state="active"] .agent-dot {
+      animation: pulse 1.1s ease-in-out infinite;
+    }
+
+    .agent-lane[data-role="researcher"][data-state="active"] .agent-dot {
+      background: var(--teal);
+    }
+
+    .agent-lane[data-role="critic"][data-state="active"] .agent-dot {
+      background: var(--coral);
+    }
+
+    .agent-lane[data-role="synthesizer"][data-state="active"] .agent-dot {
+      background: var(--purple);
+    }
+
+    .agent-lane[data-state="done"] .agent-dot {
+      background: var(--text3);
+    }
+
+    .agent-lane-body {
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text);
+      white-space: pre-wrap;
+    }
+
+    .agent-lane-body:empty::before {
+      content: attr(data-placeholder);
+      color: var(--text3);
+    }
+
+    .example-chip {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--border2);
+      background: transparent;
+      color: var(--text2);
+      cursor: pointer;
+      transition: all .15s;
+    }
+
+    .example-chip:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+      background: var(--bluedim);
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: .4;
+        transform: scale(.7);
+      }
+    }
+
+    @media (max-width:640px) {
+      .agent-lanes {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ── VOICE COMPANION (App 8) ── */
+    .vc-mic-wrap {
+      text-align: center;
+      padding: 28px 0 20px;
+    }
+
+    .vc-mic-btn {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      border: 3px solid var(--mint);
+      background: var(--mintdim);
+      color: var(--mint);
+      font-size: 30px;
+      cursor: pointer;
+      transition: all .2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+    }
+
+    .vc-mic-btn.listening {
+      background: var(--mint);
+      color: #000;
+      animation: vcPulse 1.2s ease-in-out infinite;
+    }
+
+    .vc-mic-btn.thinking {
+      animation: vcThinkPulse 1s ease-in-out infinite;
+    }
+
+    @keyframes vcThinkPulse {
+
+      0%,
+      100% {
+        opacity: .4;
+      }
+
+      50% {
+        opacity: .9;
+      }
+    }
+
+    .vc-mic-btn:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    @keyframes vcPulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(52, 211, 153, .4);
+      }
+
+      50% {
+        box-shadow: 0 0 0 14px rgba(52, 211, 153, 0);
+      }
+    }
+
+    .vc-status {
+      font-size: 13px;
+      color: var(--text2);
+      margin-bottom: 4px;
+    }
+
+    .vc-reset-btn {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--border2);
+      background: transparent;
+      color: var(--text2);
+      cursor: pointer;
+      margin-top: 10px;
+      transition: all .15s;
+    }
+
+    .vc-reset-btn:hover {
+      border-color: var(--mint);
+      color: var(--mint);
+    }
+
+    .vc-box {
+      background: var(--lift);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 12px 14px;
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 24px;
+    }
+
+    .vc-box.answer {
+      border-left: 3px solid var(--mint);
+      white-space: pre-wrap;
+    }
+
+    .vc-label {
+      font-size: 11px;
+      font-family: 'DM Mono', monospace;
+      color: var(--text3);
+      margin-bottom: 6px;
+      letter-spacing: .06em;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
 </head>
+
 <body>
 
-<header>
-  <div class="wrap">
-    <div class="header-inner">
-      <a href="https://himanshu-ai-explains.github.io" class="logo">himanshu-ai-explains</a>
-      <a href="https://himanshu-ai-explains.github.io" class="back-link">
-        ← Back to portfolio
-      </a>
-    </div>
-  </div>
-</header>
-
-<div class="wrap">
-
-  <!-- HERO -->
-  <div class="hero">
-    <div class="hero-eyebrow">Live demos · .NET + AI · Built with Semantic Kernel</div>
-    <h1>AI Apps — <em>Try Them Live</em></h1>
-    <p class="hero-desc">Four real AI applications running on Azure. No setup needed — just pick an app and start.</p>
-    <div class="app-pills">
-      <button class="pill active" data-app="3" onclick="switchApp(3)">App 3 — Chat</button>
-      <button class="pill" data-app="4" onclick="switchApp(4)">App 4 — PDF Q&A</button>
-      <button class="pill" data-app="5" onclick="switchApp(5)">App 5 — AI Agent</button>
-      <button class="pill" data-app="6" onclick="switchApp(6)">App 6 — Image AI</button>
-      <button class="pill" data-app="7" onclick="switchApp(7)">App 7 — Voice AI</button>
-      <button class="pill" data-app="75" onclick="switchApp(75)">App 7.5 — Multi-Agent</button>
-      <button class="pill" data-app="8" onclick="switchApp(8)">App 8 — Voice Companion</button>
-    </div>
-  </div>
-
-  <!-- ══ APP 3 — CHAT ══ -->
-  <div class="app-panel active" id="panel-3">
-    <div class="panel-header">
-      <div class="panel-icon" style="background:var(--purpledim); color:var(--purple)">💬</div>
-      <div class="panel-meta">
-        <div class="panel-name" style="color:var(--purple)">Semantic Kernel Chat</div>
-        <div class="panel-desc">AI chatbot with conversation memory · Built with Semantic Kernel + GPT-4o-mini · Deployed on Azure</div>
-      </div>
-    </div>
-    <div class="panel-body">
-      <div class="chat-messages" id="chat3-messages">
-        <div class="msg system"><div class="msg-bubble">Chat started. Your conversation history is maintained — ask follow-up questions and the AI will remember context.</div></div>
-      </div>
-      <div class="chat-input-row">
-        <textarea class="chat-input" id="chat3-input" placeholder="Type a message... (Shift+Enter for new line)" rows="1"
-          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat3();}"></textarea>
-        <button class="btn-send btn-purple" onclick="sendChat3()" id="chat3-btn">Send</button>
-      </div>
-      <p class="hint">Try: <strong>"Explain RAG in simple words"</strong> · <strong>"What is a token?"</strong> · <strong>"Now give me an example of that"</strong> (tests memory)</p>
-    </div>
-  </div>
-
-  <!-- ══ APP 4 — RAG ══ -->
-  <div class="app-panel" id="panel-4">
-    <div class="panel-header">
-      <div class="panel-icon" style="background:var(--tealdim); color:var(--teal)">📄</div>
-      <div class="panel-meta">
-        <div class="panel-name" style="color:var(--teal)">Chat with Your PDF</div>
-        <div class="panel-desc">Upload any PDF · AI reads and understands it · Ask questions · Get cited answers</div>
-      </div>
-    </div>
-    <div class="panel-body">
-
-      <!-- Step 1 -->
-      <div class="rag-step">
-        <div class="step-label">STEP 1 — UPLOAD YOUR PDF</div>
-        <input type="file" id="rag-file" accept=".pdf" style="display:none" onchange="uploadPDF()">
-        <button class="btn-send btn-teal" onclick="document.getElementById('rag-file').click()" id="rag-upload-btn">
-          Choose PDF file
-        </button>
-        <div id="rag-upload-status" class="hint" style="margin-top:8px"></div>
-      </div>
-
-      <!-- Step 2 -->
-      <div class="rag-step">
-        <div class="step-label">STEP 2 — ASK A QUESTION</div>
-        <div style="display:flex; gap:10px;">
-          <input type="text" class="chat-input" id="rag-question"
-            placeholder="Ask something about your document..."
-            onkeydown="if(event.key==='Enter')askRAG()"
-            style="height:40px;">
-          <button class="btn-send btn-teal" onclick="askRAG()" id="rag-ask-btn" disabled>Ask</button>
+  <header>
+    <div class="wrap">
+      <div class="header-inner">
+        <a href="https://himanshu-ai-explains.github.io" class="logo">himanshu-ai-explains</a>
+        <div class="header-actions">
+          <a href="https://topmate.io/himanshu_ai_explains" target="_blank" rel="noopener" class="book-link">Book a
+            call</a>
+          <a href="https://himanshu-ai-explains.github.io" class="back-link">← Back to portfolio</a>
         </div>
-        <p class="hint">Try: <strong>"What is the main topic?"</strong> · <strong>"Summarise section 2"</strong> · <strong>"What are the key points?"</strong></p>
-      </div>
-
-      <!-- Answer -->
-      <div id="rag-result" class="result-box" style="display:none"></div>
-    </div>
-  </div>
-
-  <!-- ══ APP 5 — AGENT ══ -->
-  <div class="app-panel" id="panel-5">
-    <div class="panel-header">
-      <div class="panel-icon" style="background:var(--golddim); color:var(--gold)">🤖</div>
-      <div class="panel-meta">
-        <div class="panel-name" style="color:var(--gold)">AI Agent — 13 Tools</div>
-        <div class="panel-desc">Autonomous AI · Decides which tools to use · Reasons across multiple steps · Built with ReAct pattern</div>
       </div>
     </div>
-    <div class="panel-body">
-      <div class="chat-messages" id="chat5-messages">
-        <div class="msg system"><div class="msg-bubble">Agent ready. It has 13 tools across 4 plugins: DateTime, Math, Tasks, and IndiaInfo. Ask it to do multiple things at once — watch it call tools automatically.</div></div>
-      </div>
-      <div class="chat-input-row">
-        <textarea class="chat-input" id="chat5-input" placeholder="Ask the agent to do something..." rows="1"
-          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat5();}"></textarea>
-        <button class="btn-send btn-gold" onclick="sendChat5()" id="chat5-btn">Send</button>
-      </div>
-      <p class="hint">
-        Try these to see the agent use multiple tools at once:<br>
-        <strong>"What day is it, calculate 18% of 5000, and tell me about AI jobs in Delhi"</strong><br>
-        <strong>"Add a high priority task: review my RAG app. Then show me all tasks."</strong><br>
-        <strong>"Convert $150 to rupees and tell me about Azure AI certifications"</strong>
-      </p>
-    </div>
-  </div>
+  </header>
 
-  <!-- ══ APP 6 — VISION ══ -->
-  <div class="app-panel" id="panel-6">
-    <div class="panel-header">
-      <div class="panel-icon" style="background:var(--coraldim); color:var(--coral)">👁️</div>
-      <div class="panel-meta">
-        <div class="panel-name" style="color:var(--coral)">Image AI — See & Understand</div>
-        <div class="panel-desc">Upload any image · AI reads text, analyses content, answers questions, extracts invoice data</div>
+  <div class="wrap">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-eyebrow">Live demos · .NET + AI · Built with Semantic Kernel</div>
+      <h1>AI Apps — <em>Try Them Live</em></h1>
+      <p class="hero-desc">Four real AI applications running on Azure. No setup needed — just pick an app and start.</p>
+      <div class="app-pills">
+        <button class="pill active" data-app="3" onclick="switchApp(3)">App 3 — Chat</button>
+        <button class="pill" data-app="4" onclick="switchApp(4)">App 4 — PDF Q&A</button>
+        <button class="pill" data-app="5" onclick="switchApp(5)">App 5 — AI Agent</button>
+        <button class="pill" data-app="6" onclick="switchApp(6)">App 6 — Image AI</button>
+        <button class="pill" data-app="7" onclick="switchApp(7)">App 7 — Voice AI</button>
+        <button class="pill" data-app="75" onclick="switchApp(75)">App 7.5 — Multi-Agent</button>
+        <button class="pill" data-app="8" onclick="switchApp(8)">App 8 — Voice Companion</button>
       </div>
     </div>
-    <div class="panel-body">
 
-      <!-- Upload zone -->
-      <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInputApp6').click()"
-        ondragover="event.preventDefault();this.classList.add('drag-over')"
-        ondragleave="this.classList.remove('drag-over')"
-        ondrop="handleDrop(event)">
-        <div class="upload-icon">🖼️</div>
-        <div class="upload-text"><strong>Click to upload</strong> or drag and drop</div>
-        <div class="upload-sub">JPG, PNG, WebP · Max 10MB · Try a receipt, invoice, screenshot, or any photo</div>
+    <!-- ══ APP 3 — CHAT ══ -->
+    <div class="app-panel active" id="panel-3">
+      <div class="panel-header">
+        <div class="panel-icon" style="background:var(--purpledim); color:var(--purple)">💬</div>
+        <div class="panel-meta">
+          <div class="panel-name" style="color:var(--purple)">Semantic Kernel Chat</div>
+          <div class="panel-desc">AI chatbot with conversation memory · Built with Semantic Kernel + GPT-4o-mini ·
+            Deployed on Azure</div>
+        </div>
       </div>
-      <input type="file" id="fileInputApp6" accept="image/*" onchange="handleImageSelect(event)">
-      <img id="imagePreview" class="image-preview" alt="Preview">
-
-      <!-- Analysis type tabs -->
-      <div class="analysis-tabs">
-        <button class="atab active" data-mode="analyze" onclick="setMode('analyze')">Full Analysis</button>
-        <button class="atab" data-mode="extract-text" onclick="setMode('extract-text')">Extract Text</button>
-        <button class="atab" data-mode="ask" onclick="setMode('ask')">Ask a Question</button>
-        <button class="atab" data-mode="extract-invoice" onclick="setMode('extract-invoice')">Invoice Data</button>
+      <div class="panel-body">
+        <div class="chat-messages" id="chat3-messages">
+          <div class="msg system">
+            <div class="msg-bubble">Chat started. Your conversation history is maintained — ask follow-up questions and
+              the AI will remember context.</div>
+          </div>
+        </div>
+        <div class="chat-input-row">
+          <textarea class="chat-input" id="chat3-input" placeholder="Type a message... (Shift+Enter for new line)"
+            rows="1"
+            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat3();}"></textarea>
+          <button class="btn-send btn-purple" onclick="sendChat3()" id="chat3-btn">Send</button>
+        </div>
+        <p class="hint">Try: <strong>"Explain RAG in simple words"</strong> · <strong>"What is a token?"</strong> ·
+          <strong>"Now give me an example of that"</strong> (tests memory)
+        </p>
       </div>
+    </div>
 
-      <!-- Question input (shown for 'ask' mode) -->
-      <div id="question-input-wrap" style="display:none; margin-bottom:16px;">
-        <input type="text" class="chat-input" id="vision-question"
-          placeholder="What do you want to know about this image?"
-          style="height:42px; width:100%;"
-          onkeydown="if(event.key==='Enter')analyzeImage()">
+    <!-- ══ APP 4 — RAG ══ -->
+    <div class="app-panel" id="panel-4">
+      <div class="panel-header">
+        <div class="panel-icon" style="background:var(--tealdim); color:var(--teal)">📄</div>
+        <div class="panel-meta">
+          <div class="panel-name" style="color:var(--teal)">Chat with Your PDF</div>
+          <div class="panel-desc">Upload any PDF · AI reads and understands it · Ask questions · Get cited answers</div>
+        </div>
       </div>
+      <div class="panel-body">
 
-      <button class="btn-send btn-coral" onclick="analyzeImage()" id="analyze-btn" disabled style="margin-bottom:16px;">
-        Analyse Image
-      </button>
+        <!-- Step 1 -->
+        <div class="rag-step">
+          <div class="step-label">STEP 1 — UPLOAD YOUR PDF</div>
+          <input type="file" id="rag-file" accept=".pdf" style="display:none" onchange="uploadPDF()">
+          <button class="btn-send btn-teal" onclick="document.getElementById('rag-file').click()" id="rag-upload-btn">
+            Choose PDF file
+          </button>
+          <div id="rag-upload-status" class="hint" style="margin-top:8px"></div>
+        </div>
 
-      <!-- Result -->
-      <div id="vision-result"></div>
-    </div>
-  </div>
+        <!-- Step 2 -->
+        <div class="rag-step">
+          <div class="step-label">STEP 2 — ASK A QUESTION</div>
+          <div style="display:flex; gap:10px;">
+            <input type="text" class="chat-input" id="rag-question" placeholder="Ask something about your document..."
+              onkeydown="if(event.key==='Enter')askRAG()" style="height:40px;">
+            <button class="btn-send btn-teal" onclick="askRAG()" id="rag-ask-btn" disabled>Ask</button>
+          </div>
+          <p class="hint">Try: <strong>"What is the main topic?"</strong> · <strong>"Summarise section 2"</strong> ·
+            <strong>"What are the key points?"</strong>
+          </p>
+        </div>
 
-  <!-- ══ APP 7 — VOICE AI ══ -->
-<div class="app-panel" id="panel-7">
-  <div class="panel-header">
-    <div class="panel-icon" style="background:var(--tealdim); color:var(--teal)">🎤</div>
-    <div class="panel-meta">
-      <div class="panel-name" style="color:var(--teal)">Voice AI Pipeline</div>
-      <div class="panel-desc">Speak → Whisper transcribes → GPT-4o-mini answers → TTS speaks back · Full audio pipeline in .NET</div>
-    </div>
-  </div>
-  <div class="panel-body">
-
-    <!-- Voice selector -->
-    <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
-      <label style="font-size:13px; color:var(--text2);">AI Voice:</label>
-      <select id="voice-select" style="background:var(--lift); border:1px solid var(--border2); color:var(--text); padding:6px 12px; border-radius:var(--r-sm); font-size:13px; font-family:'DM Sans',sans-serif; outline:none;">
-        <option value="nova">Nova — warm &amp; conversational</option>
-        <option value="alloy">Alloy — neutral &amp; clear</option>
-        <option value="shimmer">Shimmer — soft &amp; gentle</option>
-        <option value="onyx">Onyx — deep &amp; authoritative</option>
-        <option value="echo">Echo — professional</option>
-        <option value="fable">Fable — British accent</option>
-      </select>
+        <!-- Answer -->
+        <div id="rag-result" class="result-box" style="display:none"></div>
+      </div>
     </div>
 
-    <!-- Mode tabs -->
-    <div class="analysis-tabs" style="margin-bottom:20px;">
-      <button class="atab active" style="border-color:var(--teal); background:var(--tealdim); color:var(--teal);" data-vmode="record" onclick="setVoiceMode('record')">🎙️ Record from Browser</button>
-      <button class="atab" data-vmode="upload" onclick="setVoiceMode('upload')">📁 Upload Audio File</button>
-      <button class="atab" data-vmode="tts" onclick="setVoiceMode('tts')">🔊 Text to Speech</button>
+    <!-- ══ APP 5 — AGENT ══ -->
+    <div class="app-panel" id="panel-5">
+      <div class="panel-header">
+        <div class="panel-icon" style="background:var(--golddim); color:var(--gold)">🤖</div>
+        <div class="panel-meta">
+          <div class="panel-name" style="color:var(--gold)">AI Agent — 13 Tools</div>
+          <div class="panel-desc">Autonomous AI · Decides which tools to use · Reasons across multiple steps · Built
+            with ReAct pattern</div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="chat-messages" id="chat5-messages">
+          <div class="msg system">
+            <div class="msg-bubble">Agent ready. It has 13 tools across 4 plugins: DateTime, Math, Tasks, and IndiaInfo.
+              Ask it to do multiple things at once — watch it call tools automatically.</div>
+          </div>
+        </div>
+        <div class="chat-input-row">
+          <textarea class="chat-input" id="chat5-input" placeholder="Ask the agent to do something..." rows="1"
+            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat5();}"></textarea>
+          <button class="btn-send btn-gold" onclick="sendChat5()" id="chat5-btn">Send</button>
+        </div>
+        <p class="hint">
+          Try these to see the agent use multiple tools at once:<br>
+          <strong>"What day is it, calculate 18% of 5000, and tell me about AI jobs in Delhi"</strong><br>
+          <strong>"Add a high priority task: review my RAG app. Then show me all tasks."</strong><br>
+          <strong>"Convert $150 to rupees and tell me about Azure AI certifications"</strong>
+        </p>
+      </div>
     </div>
 
-    <!-- RECORD MODE -->
-    <div id="voice-record-mode">
-      <div style="text-align:center; padding:32px 0;">
-        <div id="record-btn-wrap">
-          <button id="record-btn" onclick="toggleRecording()"
-            style="width:80px; height:80px; border-radius:50%; border:3px solid var(--teal);
+    <!-- ══ APP 6 — VISION ══ -->
+    <div class="app-panel" id="panel-6">
+      <div class="panel-header">
+        <div class="panel-icon" style="background:var(--coraldim); color:var(--coral)">👁️</div>
+        <div class="panel-meta">
+          <div class="panel-name" style="color:var(--coral)">Image AI — See & Understand</div>
+          <div class="panel-desc">Upload any image · AI reads text, analyses content, answers questions, extracts
+            invoice data</div>
+        </div>
+      </div>
+      <div class="panel-body">
+
+        <!-- Upload zone -->
+        <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInputApp6').click()"
+          ondragover="event.preventDefault();this.classList.add('drag-over')"
+          ondragleave="this.classList.remove('drag-over')" ondrop="handleDrop(event)">
+          <div class="upload-icon">🖼️</div>
+          <div class="upload-text"><strong>Click to upload</strong> or drag and drop</div>
+          <div class="upload-sub">JPG, PNG, WebP · Max 10MB · Try a receipt, invoice, screenshot, or any photo</div>
+        </div>
+        <input type="file" id="fileInputApp6" accept="image/*" onchange="handleImageSelect(event)">
+        <img id="imagePreview" class="image-preview" alt="Preview">
+
+        <!-- Analysis type tabs -->
+        <div class="analysis-tabs">
+          <button class="atab active" data-mode="analyze" onclick="setMode('analyze')">Full Analysis</button>
+          <button class="atab" data-mode="extract-text" onclick="setMode('extract-text')">Extract Text</button>
+          <button class="atab" data-mode="ask" onclick="setMode('ask')">Ask a Question</button>
+          <button class="atab" data-mode="extract-invoice" onclick="setMode('extract-invoice')">Invoice Data</button>
+        </div>
+
+        <!-- Question input (shown for 'ask' mode) -->
+        <div id="question-input-wrap" style="display:none; margin-bottom:16px;">
+          <input type="text" class="chat-input" id="vision-question"
+            placeholder="What do you want to know about this image?" style="height:42px; width:100%;"
+            onkeydown="if(event.key==='Enter')analyzeImage()">
+        </div>
+
+        <button class="btn-send btn-coral" onclick="analyzeImage()" id="analyze-btn" disabled
+          style="margin-bottom:16px;">
+          Analyse Image
+        </button>
+
+        <!-- Result -->
+        <div id="vision-result"></div>
+      </div>
+    </div>
+
+    <!-- ══ APP 7 — VOICE AI ══ -->
+    <div class="app-panel" id="panel-7">
+      <div class="panel-header">
+        <div class="panel-icon" style="background:var(--tealdim); color:var(--teal)">🎤</div>
+        <div class="panel-meta">
+          <div class="panel-name" style="color:var(--teal)">Voice AI Pipeline</div>
+          <div class="panel-desc">Speak → Whisper transcribes → GPT-4o-mini answers → TTS speaks back · Full audio
+            pipeline in .NET</div>
+        </div>
+      </div>
+      <div class="panel-body">
+
+        <!-- Voice selector -->
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
+          <label style="font-size:13px; color:var(--text2);">AI Voice:</label>
+          <select id="voice-select"
+            style="background:var(--lift); border:1px solid var(--border2); color:var(--text); padding:6px 12px; border-radius:var(--r-sm); font-size:13px; font-family:'DM Sans',sans-serif; outline:none;">
+            <option value="nova">Nova — warm &amp; conversational</option>
+            <option value="alloy">Alloy — neutral &amp; clear</option>
+            <option value="shimmer">Shimmer — soft &amp; gentle</option>
+            <option value="onyx">Onyx — deep &amp; authoritative</option>
+            <option value="echo">Echo — professional</option>
+            <option value="fable">Fable — British accent</option>
+          </select>
+        </div>
+
+        <!-- Mode tabs -->
+        <div class="analysis-tabs" style="margin-bottom:20px;">
+          <button class="atab active" style="border-color:var(--teal); background:var(--tealdim); color:var(--teal);"
+            data-vmode="record" onclick="setVoiceMode('record')">🎙️ Record from Browser</button>
+          <button class="atab" data-vmode="upload" onclick="setVoiceMode('upload')">📁 Upload Audio File</button>
+          <button class="atab" data-vmode="tts" onclick="setVoiceMode('tts')">🔊 Text to Speech</button>
+        </div>
+
+        <!-- RECORD MODE -->
+        <div id="voice-record-mode">
+          <div style="text-align:center; padding:32px 0;">
+            <div id="record-btn-wrap">
+              <button id="record-btn" onclick="toggleRecording()" style="width:80px; height:80px; border-radius:50%; border:3px solid var(--teal);
                    background:var(--tealdim); color:var(--teal); font-size:28px;
                    cursor:pointer; transition:all .2s; display:flex; align-items:center;
                    justify-content:center; margin:0 auto 16px;">
-            🎤
+                🎤
+              </button>
+              <div id="record-status" style="font-size:14px; color:var(--text2);">Click to start recording</div>
+              <div id="record-timer"
+                style="font-size:24px; font-family:'DM Mono',monospace; color:var(--teal); margin-top:8px; display:none;">
+                0:00</div>
+            </div>
+          </div>
+          <p class="hint" style="text-align:center;">
+            Try saying: <strong>"What is RAG?"</strong> · <strong>"Explain AI agents simply"</strong> · <strong>"What is
+              Semantic Kernel?"</strong>
+          </p>
+        </div>
+
+        <!-- UPLOAD MODE -->
+        <div id="voice-upload-mode" style="display:none;">
+          <div class="upload-zone" onclick="document.getElementById('audioFileInput').click()"
+            style="border-color:var(--border2); margin-bottom:16px;">
+            <div class="upload-icon">🎵</div>
+            <div class="upload-text"><strong>Click to upload audio</strong></div>
+            <div class="upload-sub">MP3, WAV, WebM, M4A, OGG · Max 25MB</div>
+          </div>
+          <input type="file" id="audioFileInput" accept="audio/*,.webm,.ogg,.wav,.mp3,.m4a" style="display:none"
+            onchange="handleAudioUpload(event)">
+          <button class="btn-send" id="upload-ask-btn" disabled onclick="sendUploadedAudio()"
+            style="background:var(--teal); color:#000; margin-bottom:16px;">
+            Send to AI
           </button>
-          <div id="record-status" style="font-size:14px; color:var(--text2);">Click to start recording</div>
-          <div id="record-timer" style="font-size:24px; font-family:'DM Mono',monospace; color:var(--teal); margin-top:8px; display:none;">0:00</div>
+        </div>
+
+        <!-- TTS MODE -->
+        <div id="voice-tts-mode" style="display:none;">
+          <textarea class="chat-input" id="tts-text" placeholder="Type any text and hear the AI speak it..."
+            style="width:100%; height:100px; margin-bottom:12px; resize:vertical;"></textarea>
+          <button class="btn-send" onclick="convertTextToSpeech()"
+            style="background:var(--teal); color:#000; margin-bottom:16px;">
+            Generate Speech
+          </button>
+        </div>
+
+        <!-- RESULTS -->
+        <div id="voice-result" style="display:none;">
+
+          <!-- Transcript -->
+          <div id="voice-transcript-box" style="display:none; margin-bottom:12px;">
+            <div
+              style="font-size:11px; font-family:'DM Mono',monospace; color:var(--text3); margin-bottom:6px; letter-spacing:.06em;">
+              YOU SAID</div>
+            <div id="voice-transcript-text"
+              style="background:var(--lift); border:1px solid var(--border); border-radius:var(--r-sm); padding:12px 14px; font-size:14px; color:var(--text); line-height:1.6;">
+            </div>
+          </div>
+
+          <!-- AI Answer Text -->
+          <div id="voice-answer-box" style="display:none; margin-bottom:12px;">
+            <div
+              style="font-size:11px; font-family:'DM Mono',monospace; color:var(--text3); margin-bottom:6px; letter-spacing:.06em;">
+              AI ANSWERED</div>
+            <div id="voice-answer-text"
+              style="background:var(--lift); border:1px solid var(--border); border-left:3px solid var(--teal); border-radius:var(--r-sm); padding:12px 14px; font-size:14px; color:var(--text); line-height:1.6;">
+            </div>
+          </div>
+
+          <!-- Audio Player -->
+          <div id="voice-audio-box" style="display:none;">
+            <div
+              style="font-size:11px; font-family:'DM Mono',monospace; color:var(--text3); margin-bottom:6px; letter-spacing:.06em;">
+              LISTEN TO AI RESPONSE</div>
+            <audio id="voice-audio-player" controls style="width:100%; height:44px; border-radius:var(--r-sm);"></audio>
+          </div>
+
+          <!-- Processing indicator -->
+          <div id="voice-loading" style="display:none; padding:20px; text-align:center;">
+            <div class="spinner" style="margin:0 auto 10px;"></div>
+            <div id="voice-loading-text" style="font-size:13px; color:var(--text2);">Processing...</div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══ APP 7.5 — MULTI-AGENT REASONING ══ -->
+    <div class="app-panel" id="panel-75">
+      <div class="panel-header">
+        <div class="panel-icon" style="background:var(--bluedim); color:var(--blue)">🧠</div>
+        <div class="panel-meta">
+          <div class="panel-name" style="color:var(--blue)">Live Multi-Agent Reasoning</div>
+          <div class="panel-desc">Researcher → Critic → Synthesizer reason live, one after another · Watch the thinking,
+            not just the answer</div>
         </div>
       </div>
-      <p class="hint" style="text-align:center;">
-        Try saying: <strong>"What is RAG?"</strong> · <strong>"Explain AI agents simply"</strong> · <strong>"What is Semantic Kernel?"</strong>
+      <div class="panel-body">
+        <p style="font-size:13px; color:var(--text2); margin-bottom:16px; line-height:1.6;">
+          <strong style="color:var(--text);">Real use case:</strong> this is how AI decisions get an audit trail instead
+          of a black box — one agent proposes, another challenges it, a third finalizes, and every step stays visible.
+          It's the trust gap currently holding back autonomous agents in finance, legal, and compliance.
+        </p>
+        <div style="display:flex; gap:10px; margin-bottom:20px;">
+          <input type="text" class="chat-input" id="agent-question"
+            placeholder="Ask something the panel should reason through together..."
+            onkeydown="if(event.key==='Enter')askAgentPanel()">
+          <button class="btn-send" style="background:var(--blue); color:#000;" onclick="askAgentPanel()"
+            id="agent-ask-btn">Ask the panel</button>
+        </div>
+        <div class="agent-lanes">
+          <div class="agent-lane" data-role="researcher" data-state="idle">
+            <div class="agent-lane-header">
+              <span style="color:var(--teal)">Researcher</span>
+              <span class="agent-lane-status"><span class="agent-dot"></span><span
+                  class="agent-status-text">Waiting</span></span>
+            </div>
+            <div class="agent-lane-body" id="agent-body-researcher"
+              data-placeholder="Will gather the key facts and angles first."></div>
+          </div>
+          <div class="agent-lane" data-role="critic" data-state="idle">
+            <div class="agent-lane-header">
+              <span style="color:var(--coral)">Critic</span>
+              <span class="agent-lane-status"><span class="agent-dot"></span><span
+                  class="agent-status-text">Waiting</span></span>
+            </div>
+            <div class="agent-lane-body" id="agent-body-critic"
+              data-placeholder="Will challenge the Researcher's findings next."></div>
+          </div>
+          <div class="agent-lane" data-role="synthesizer" data-state="idle">
+            <div class="agent-lane-header">
+              <span style="color:var(--purple)">Synthesizer</span>
+              <span class="agent-lane-status"><span class="agent-dot"></span><span
+                  class="agent-status-text">Waiting</span></span>
+            </div>
+            <div class="agent-lane-body" id="agent-body-synthesizer"
+              data-placeholder="Will merge both into the final answer."></div>
+          </div>
+        </div>
+        <p class="hint">Try: <strong>"Should a startup build its own auth system or use a third-party
+            provider?"</strong> · <strong>"Is remote work good for productivity?"</strong></p>
+      </div>
+    </div>
+
+    <!-- ══ APP 8 — LIVE VOICE COMPANION ══ -->
+    <div class="app-panel" id="panel-8">
+      <div class="panel-header">
+        <div class="panel-icon" style="background:var(--mintdim); color:var(--mint)">🎙️</div>
+        <div class="panel-meta">
+          <div class="panel-name" style="color:var(--mint)">Live Voice Companion</div>
+          <div class="panel-desc">Push to talk, get a streamed answer back · Free browser speech-to-text + GPT-4o-mini
+            over SignalR</div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <p style="font-size:13px; color:var(--text2); margin-bottom:16px; line-height:1.6;">
+          <strong style="color:var(--text);">Real use case:</strong> an always-ready voice assistant pattern with zero
+          per-minute transcription cost — speech-to-text runs free in your browser, GPT-4o-mini streams its answer back
+          token by token instead of making you wait for the full response, and the conversation remembers context until
+          you reset it. The pattern behind in-app voice support and hands-free assistants.
+        </p>
+
+        <div class="vc-mic-wrap">
+          <button class="vc-mic-btn" id="vc-mic-btn" onclick="vcToggleMic()">🎤</button>
+          <div class="vc-status" id="vc-status">Click the mic, ask a question, click again to send</div>
+          <button class="vc-reset-btn" id="vc-reset-btn" onclick="vcResetConversation()">🔄 New Conversation</button>
+        </div>
+
+        <div id="vc-transcript-box" style="display:none; margin-bottom:12px;">
+          <div class="vc-label">YOU SAID</div>
+          <div class="vc-box" id="vc-transcript-text"></div>
+        </div>
+
+        <div id="vc-answer-box" style="display:none;">
+          <div class="vc-label">AI ANSWERED</div>
+          <div class="vc-box answer" id="vc-answer-text"></div>
+        </div>
+
+        <p class="hint" style="text-align:center; margin-top:16px;">
+          Works in Chrome or Edge · Try: <strong>"What is Semantic Kernel?"</strong> · <strong>"Explain RAG in one
+            sentence"</strong>
+        </p>
+      </div>
+    </div>
+
+    <!-- BOTTOM LINKS -->
+    <div style="text-align:center; padding:48px 0 32px; border-top:1px solid var(--border); margin-top:40px;">
+      <p style="font-size:13px; color:var(--text3); margin-bottom:16px;">
+        All apps built with .NET 8 · Semantic Kernel · OpenAI GPT-4o · Deployed on Azure App Service
       </p>
-    </div>
-
-    <!-- UPLOAD MODE -->
-    <div id="voice-upload-mode" style="display:none;">
-      <div class="upload-zone" onclick="document.getElementById('audioFileInput').click()"
-        style="border-color:var(--border2); margin-bottom:16px;">
-        <div class="upload-icon">🎵</div>
-        <div class="upload-text"><strong>Click to upload audio</strong></div>
-        <div class="upload-sub">MP3, WAV, WebM, M4A, OGG · Max 25MB</div>
-      </div>
-      <input type="file" id="audioFileInput" accept="audio/*,.webm,.ogg,.wav,.mp3,.m4a" style="display:none" onchange="handleAudioUpload(event)">
-      <button class="btn-send" id="upload-ask-btn" disabled onclick="sendUploadedAudio()"
-        style="background:var(--teal); color:#000; margin-bottom:16px;">
-        Send to AI
-      </button>
-    </div>
-
-    <!-- TTS MODE -->
-    <div id="voice-tts-mode" style="display:none;">
-      <textarea class="chat-input" id="tts-text" placeholder="Type any text and hear the AI speak it..."
-        style="width:100%; height:100px; margin-bottom:12px; resize:vertical;"></textarea>
-      <button class="btn-send" onclick="convertTextToSpeech()"
-        style="background:var(--teal); color:#000; margin-bottom:16px;">
-        Generate Speech
-      </button>
-    </div>
-
-    <!-- RESULTS -->
-    <div id="voice-result" style="display:none;">
-
-      <!-- Transcript -->
-      <div id="voice-transcript-box" style="display:none; margin-bottom:12px;">
-        <div style="font-size:11px; font-family:'DM Mono',monospace; color:var(--text3); margin-bottom:6px; letter-spacing:.06em;">YOU SAID</div>
-        <div id="voice-transcript-text" style="background:var(--lift); border:1px solid var(--border); border-radius:var(--r-sm); padding:12px 14px; font-size:14px; color:var(--text); line-height:1.6;"></div>
-      </div>
-
-      <!-- AI Answer Text -->
-      <div id="voice-answer-box" style="display:none; margin-bottom:12px;">
-        <div style="font-size:11px; font-family:'DM Mono',monospace; color:var(--text3); margin-bottom:6px; letter-spacing:.06em;">AI ANSWERED</div>
-        <div id="voice-answer-text" style="background:var(--lift); border:1px solid var(--border); border-left:3px solid var(--teal); border-radius:var(--r-sm); padding:12px 14px; font-size:14px; color:var(--text); line-height:1.6;"></div>
-      </div>
-
-      <!-- Audio Player -->
-      <div id="voice-audio-box" style="display:none;">
-        <div style="font-size:11px; font-family:'DM Mono',monospace; color:var(--text3); margin-bottom:6px; letter-spacing:.06em;">LISTEN TO AI RESPONSE</div>
-        <audio id="voice-audio-player" controls style="width:100%; height:44px; border-radius:var(--r-sm);"></audio>
-      </div>
-
-      <!-- Processing indicator -->
-      <div id="voice-loading" style="display:none; padding:20px; text-align:center;">
-        <div class="spinner" style="margin:0 auto 10px;"></div>
-        <div id="voice-loading-text" style="font-size:13px; color:var(--text2);">Processing...</div>
-      </div>
-
-    </div>
-
-  </div>
-</div>
-
-<!-- ══ APP 7.5 — MULTI-AGENT REASONING ══ -->
-<div class="app-panel" id="panel-75">
-  <div class="panel-header">
-    <div class="panel-icon" style="background:var(--bluedim); color:var(--blue)">🧠</div>
-    <div class="panel-meta">
-      <div class="panel-name" style="color:var(--blue)">Live Multi-Agent Reasoning</div>
-      <div class="panel-desc">Researcher → Critic → Synthesizer reason live, one after another · Watch the thinking, not just the answer</div>
-    </div>
-  </div>
-  <div class="panel-body">
-     <p style="font-size:13px; color:var(--text2); margin-bottom:16px; line-height:1.6;">
-      <strong style="color:var(--text);">Real use case:</strong> this is how AI decisions get an audit trail instead of a black box — one agent proposes, another challenges it, a third finalizes, and every step stays visible. It's the trust gap currently holding back autonomous agents in finance, legal, and compliance.
-     </p>
-    <div style="display:flex; gap:10px; margin-bottom:20px;">
-      <input type="text" class="chat-input" id="agent-question"
-        placeholder="Ask something the panel should reason through together..."
-        onkeydown="if(event.key==='Enter')askAgentPanel()">
-      <button class="btn-send" style="background:var(--blue); color:#000;" onclick="askAgentPanel()" id="agent-ask-btn">Ask the panel</button>
-    </div>
-    <div class="agent-lanes">
-      <div class="agent-lane" data-role="researcher" data-state="idle">
-        <div class="agent-lane-header">
-          <span style="color:var(--teal)">Researcher</span>
-          <span class="agent-lane-status"><span class="agent-dot"></span><span class="agent-status-text">Waiting</span></span>
-        </div>
-        <div class="agent-lane-body" id="agent-body-researcher" data-placeholder="Will gather the key facts and angles first."></div>
-      </div>
-      <div class="agent-lane" data-role="critic" data-state="idle">
-        <div class="agent-lane-header">
-          <span style="color:var(--coral)">Critic</span>
-          <span class="agent-lane-status"><span class="agent-dot"></span><span class="agent-status-text">Waiting</span></span>
-        </div>
-        <div class="agent-lane-body" id="agent-body-critic" data-placeholder="Will challenge the Researcher's findings next."></div>
-      </div>
-      <div class="agent-lane" data-role="synthesizer" data-state="idle">
-        <div class="agent-lane-header">
-          <span style="color:var(--purple)">Synthesizer</span>
-          <span class="agent-lane-status"><span class="agent-dot"></span><span class="agent-status-text">Waiting</span></span>
-        </div>
-        <div class="agent-lane-body" id="agent-body-synthesizer" data-placeholder="Will merge both into the final answer."></div>
+      <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+        <a href="https://himanshu-ai-explains.github.io"
+          style="font-size:13px; color:var(--text2); text-decoration:none;">← Portfolio</a>
+        <a href="https://github.com/himanshu-ai-explains/dotnet-ai-journey" target="_blank"
+          style="font-size:13px; color:var(--text2); text-decoration:none;">GitHub →</a>
+        <a href="https://www.linkedin.com/in/YOUR-LINKEDIN" target="_blank"
+          style="font-size:13px; color:var(--text2); text-decoration:none;">LinkedIn →</a>
       </div>
     </div>
-    <p class="hint">Try: <strong>"Should a startup build its own auth system or use a third-party provider?"</strong> · <strong>"Is remote work good for productivity?"</strong></p>
-  </div>
-</div>
 
-<!-- ══ APP 8 — LIVE VOICE COMPANION ══ -->
-<div class="app-panel" id="panel-8">
-  <div class="panel-header">
-    <div class="panel-icon" style="background:var(--mintdim); color:var(--mint)">🎙️</div>
-    <div class="panel-meta">
-      <div class="panel-name" style="color:var(--mint)">Live Voice Companion</div>
-      <div class="panel-desc">Push to talk, get a streamed answer back · Free browser speech-to-text + GPT-4o-mini over SignalR</div>
-    </div>
-  </div>
-  <div class="panel-body">
-    <p style="font-size:13px; color:var(--text2); margin-bottom:16px; line-height:1.6;">
-      <strong style="color:var(--text);">Real use case:</strong> an always-ready voice assistant pattern with zero per-minute transcription cost — speech-to-text runs free in your browser, GPT-4o-mini streams its answer back token by token instead of making you wait for the full response, and the conversation remembers context until you reset it. The pattern behind in-app voice support and hands-free assistants.
-    </p>
+  </div><!-- /wrap -->
 
-    <div class="vc-mic-wrap">
-      <button class="vc-mic-btn" id="vc-mic-btn" onclick="vcToggleMic()">🎤</button>
-      <div class="vc-status" id="vc-status">Click the mic, ask a question, click again to send</div>
-      <button class="vc-reset-btn" id="vc-reset-btn" onclick="vcResetConversation()">🔄 New Conversation</button>
-    </div>
+  <script>
 
-    <div id="vc-transcript-box" style="display:none; margin-bottom:12px;">
-      <div class="vc-label">YOU SAID</div>
-      <div class="vc-box" id="vc-transcript-text"></div>
-    </div>
+    const URLS = {
+      app3: 'https://aiapp3-himanshu-h8e3c0bfhbbjfbhr.centralindia-01.azurewebsites.net',
+      app4: 'https://aiapp4rag-himanshu-hnggcnckgkepecce.centralindia-01.azurewebsites.net',
+      app5: 'https://aiapp5agents-himanshu-azfkh9akauecdtg8.centralindia-01.azurewebsites.net',
+      app6: 'https://aiapp6multimodalvision-eab0hkbfc6bjgeca.centralindia-01.azurewebsites.net',
+      app7: 'https://aiapp7voice-himanshu-bzgwg5d9azd0bbg2.centralindia-01.azurewebsites.net',
+      app75: 'https://aiapp7-5multiagent-cuard3affzdsa7dc.centralindia-01.azurewebsites.net',
+      app8: 'https://aiapp8voicecompanion-himanshu-bucweya4hefub6hu.centralindia-01.azurewebsites.net/'
+    };
 
-    <div id="vc-answer-box" style="display:none;">
-      <div class="vc-label">AI ANSWERED</div>
-      <div class="vc-box answer" id="vc-answer-text"></div>
-    </div>
+    // ── STATE ──
+    let ragCollectionName = null;
+    let currentMode = 'analyze';
+    let selectedImageFile = null;
+    const chat3History = [];
+    const chat5History = [];
 
-   <p class="hint" style="text-align:center; margin-top:16px;">
-      Works in Chrome or Edge · Try: <strong>"What is the capital of France?"</strong> then <strong>"What's its population?"</strong> — it remembers
-  </p>
-  </div>
-</div>
+    // ── NAVIGATION ──
+    function switchApp(n) {
+      document.querySelectorAll('.app-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+      document.getElementById(`panel-${n}`).classList.add('active');
+      document.querySelector(`.pill[data-app="${n}"]`).classList.add('active');
+    }
 
-  <!-- BOTTOM LINKS -->
-  <div style="text-align:center; padding:48px 0 32px; border-top:1px solid var(--border); margin-top:40px;">
-    <p style="font-size:13px; color:var(--text3); margin-bottom:16px;">
-      All apps built with .NET 8 · Semantic Kernel · OpenAI GPT-4o · Deployed on Azure App Service
-    </p>
-    <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
-      <a href="https://himanshu-ai-explains.github.io" style="font-size:13px; color:var(--text2); text-decoration:none;">← Portfolio</a>
-      <a href="https://github.com/himanshu-ai-explains/dotnet-ai-journey" target="_blank" style="font-size:13px; color:var(--text2); text-decoration:none;">GitHub →</a>
-      <a href="https://www.linkedin.com/in/YOUR-LINKEDIN" target="_blank" style="font-size:13px; color:var(--text2); text-decoration:none;">LinkedIn →</a>
-    </div>
-  </div>
+    // ══ APP 3 — CHAT ══
+    async function sendChat3() {
+      const input = document.getElementById('chat3-input');
+      const msg = input.value.trim();
+      if (!msg) return;
 
-</div><!-- /wrap -->
+      appendMsg('chat3-messages', 'user', msg, '👤');
+      input.value = '';
+      input.style.height = 'auto';
+      chat3History.push({ role: 'user', content: msg });
 
-<script>
+      const btn = document.getElementById('chat3-btn');
+      btn.disabled = true;
+      const loadingId = appendMsg('chat3-messages', 'ai', '...', '🤖');
 
-const URLS = {
-  app3: 'https://aiapp3-himanshu-h8e3c0bfhbbjfbhr.centralindia-01.azurewebsites.net',
-  app4: 'https://aiapp4rag-himanshu-hnggcnckgkepecce.centralindia-01.azurewebsites.net',
-  app5: 'https://aiapp5agents-himanshu-azfkh9akauecdtg8.centralindia-01.azurewebsites.net',
-  app6: 'https://aiapp6multimodalvision-eab0hkbfc6bjgeca.centralindia-01.azurewebsites.net',
-  app7: 'https://aiapp7voice-himanshu-bzgwg5d9azd0bbg2.centralindia-01.azurewebsites.net',
-  app75: 'https://aiapp7-5multiagent-cuard3affzdsa7dc.centralindia-01.azurewebsites.net',
-  app8: 'https://aiapp8voicecompanion-himanshu-bucweya4hefub6hu.centralindia-01.azurewebsites.net/'
-};
+      try {
+        const res = await fetch(`${URLS.app3}/api/chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: msg, sessionId: 'demo-web-' + getSessionId('chat3') })
+        });
+        const data = await res.json();
+        const reply = data.reply || data.answer || JSON.stringify(data);
+        updateMsg(loadingId, reply);
+        chat3History.push({ role: 'assistant', content: reply });
+      } catch (e) {
+        updateMsg(loadingId, `⚠️ Could not reach the API. The Azure app may be sleeping — try again in 30 seconds.\n\n${e.message}`);
+      } finally { btn.disabled = false; }
+    }
 
-// ── STATE ──
-let ragCollectionName = null;
-let currentMode = 'analyze';
-let selectedImageFile = null;
-const chat3History = [];
-const chat5History = [];
+    // ══ APP 4 — RAG ══
+    async function uploadPDF() {
+      const file = document.getElementById('rag-file').files[0];
+      if (!file) return;
 
-// ── NAVIGATION ──
-function switchApp(n) {
-  document.querySelectorAll('.app-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
-  document.getElementById(`panel-${n}`).classList.add('active');
-  document.querySelector(`.pill[data-app="${n}"]`).classList.add('active');
-}
+      const btn = document.getElementById('rag-upload-btn');
+      const status = document.getElementById('rag-upload-status');
+      const askBtn = document.getElementById('rag-ask-btn');
 
-// ══ APP 3 — CHAT ══
-async function sendChat3() {
-  const input = document.getElementById('chat3-input');
-  const msg = input.value.trim();
-  if (!msg) return;
+      btn.disabled = true;
+      btn.textContent = 'Processing PDF...';
+      status.innerHTML = '<span style="color:var(--text2)">Extracting text, chunking, and generating embeddings...</span>';
 
-  appendMsg('chat3-messages', 'user', msg, '👤');
-  input.value = '';
-  input.style.height = 'auto';
-  chat3History.push({ role:'user', content:msg });
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
 
-  const btn = document.getElementById('chat3-btn');
-  btn.disabled = true;
-  const loadingId = appendMsg('chat3-messages', 'ai', '...', '🤖');
+        const res = await fetch(`${URLS.app4}/api/rag/upload`, {
+          method: 'POST', body: formData
+        });
+        const data = await res.json();
 
-  try {
-    const res = await fetch(`${URLS.app3}/api/chat`, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ message: msg, sessionId:'demo-web-' + getSessionId('chat3') })
-    });
-    const data = await res.json();
-    const reply = data.reply || data.answer || JSON.stringify(data);
-    updateMsg(loadingId, reply);
-    chat3History.push({ role:'assistant', content:reply });
-  } catch(e) {
-    updateMsg(loadingId, `⚠️ Could not reach the API. The Azure app may be sleeping — try again in 30 seconds.\n\n${e.message}`);
-  } finally { btn.disabled = false; }
-}
-
-// ══ APP 4 — RAG ══
-async function uploadPDF() {
-  const file = document.getElementById('rag-file').files[0];
-  if (!file) return;
-
-  const btn = document.getElementById('rag-upload-btn');
-  const status = document.getElementById('rag-upload-status');
-  const askBtn = document.getElementById('rag-ask-btn');
-
-  btn.disabled = true;
-  btn.textContent = 'Processing PDF...';
-  status.innerHTML = '<span style="color:var(--text2)">Extracting text, chunking, and generating embeddings...</span>';
-
-  try {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    const res = await fetch(`${URLS.app4}/api/rag/upload`, {
-      method:'POST', body: formData
-    });
-    const data = await res.json();
-
-    if (data.collectionName) {
-      ragCollectionName = data.collectionName;
-      status.innerHTML = `
+        if (data.collectionName) {
+          ragCollectionName = data.collectionName;
+          status.innerHTML = `
         <div class="collection-tag">✓ Ready · ${data.chunksCreated} chunks · "${data.fileName}"</div>
       `;
-      askBtn.disabled = false;
-      btn.textContent = 'Upload a different PDF';
-    } else {
-      status.innerHTML = `<span style="color:var(--coral)">Upload failed: ${data.error || 'Unknown error'}</span>`;
-      btn.textContent = 'Try again';
+          askBtn.disabled = false;
+          btn.textContent = 'Upload a different PDF';
+        } else {
+          status.innerHTML = `<span style="color:var(--coral)">Upload failed: ${data.error || 'Unknown error'}</span>`;
+          btn.textContent = 'Try again';
+        }
+      } catch (e) {
+        status.innerHTML = `<span style="color:var(--coral)">⚠️ Cannot reach API: ${e.message}</span>`;
+        btn.textContent = 'Try again';
+      } finally { btn.disabled = false; }
     }
-  } catch(e) {
-    status.innerHTML = `<span style="color:var(--coral)">⚠️ Cannot reach API: ${e.message}</span>`;
-    btn.textContent = 'Try again';
-  } finally { btn.disabled = false; }
-}
 
-async function askRAG() {
-  if (!ragCollectionName) {
-    showRAGResult('Please upload a PDF first.', false);
-    return;
-  }
-  const question = document.getElementById('rag-question').value.trim();
-  if (!question) return;
+    async function askRAG() {
+      if (!ragCollectionName) {
+        showRAGResult('Please upload a PDF first.', false);
+        return;
+      }
+      const question = document.getElementById('rag-question').value.trim();
+      if (!question) return;
 
-  const btn = document.getElementById('rag-ask-btn');
-  btn.disabled = true;
-  showRAGResult('Searching document...', true);
+      const btn = document.getElementById('rag-ask-btn');
+      btn.disabled = true;
+      showRAGResult('Searching document...', true);
 
-  try {
-    const res = await fetch(`${URLS.app4}/api/rag/ask`, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ question, collectionName: ragCollectionName })
-    });
-    const data = await res.json();
+      try {
+        const res = await fetch(`${URLS.app4}/api/rag/ask`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question, collectionName: ragCollectionName })
+        });
+        const data = await res.json();
 
-    let html = `<div style="margin-bottom:12px;">${escapeHtml(data.answer || 'No answer returned.')}</div>`;
+        let html = `<div style="margin-bottom:12px;">${escapeHtml(data.answer || 'No answer returned.')}</div>`;
 
-    if (data.sources && data.sources.length > 0) {
-      html += `<div class="sources-box"><div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:6px;">SOURCES USED</div>`;
-      data.sources.forEach((s, i) => {
-        html += `<div class="source-item">
-          <span>Chunk #${s.chunkIndex}: ${escapeHtml((s.preview||'').substring(0,80))}...</span>
-          <span class="score-badge">${(s.relevanceScore*100).toFixed(0)}%</span>
+        if (data.sources && data.sources.length > 0) {
+          html += `<div class="sources-box"><div style="font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:6px;">SOURCES USED</div>`;
+          data.sources.forEach((s, i) => {
+            html += `<div class="source-item">
+          <span>Chunk #${s.chunkIndex}: ${escapeHtml((s.preview || '').substring(0, 80))}...</span>
+          <span class="score-badge">${(s.relevanceScore * 100).toFixed(0)}%</span>
         </div>`;
+          });
+          html += `</div>`;
+        }
+
+        const el = document.getElementById('rag-result');
+        el.innerHTML = html;
+        el.style.display = 'block';
+        el.classList.remove('loading');
+      } catch (e) {
+        showRAGResult(`⚠️ Error: ${e.message}`, false);
+      } finally { btn.disabled = false; }
+    }
+
+    function showRAGResult(msg, loading) {
+      const el = document.getElementById('rag-result');
+      el.style.display = 'flex';
+      if (loading) {
+        el.classList.add('loading');
+        el.innerHTML = `<div class="spinner"></div><span>${msg}</span>`;
+      } else {
+        el.classList.remove('loading');
+        el.style.display = 'block';
+        el.innerHTML = msg;
+      }
+    }
+
+    // ══ APP 5 — AGENT ══
+    async function sendChat5() {
+      const input = document.getElementById('chat5-input');
+      const msg = input.value.trim();
+      if (!msg) return;
+
+      appendMsg('chat5-messages', 'user', msg, '👤');
+      input.value = '';
+      const btn = document.getElementById('chat5-btn');
+      btn.disabled = true;
+
+      const loadingId = appendMsg('chat5-messages', 'ai', '⚙️ Agent is reasoning...', '🤖');
+
+      try {
+        const res = await fetch(`${URLS.app5}/api/agent/chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: msg,
+            sessionId: 'demo-web-' + getSessionId('chat5')
+          })
+        });
+        const data = await res.json();
+
+        if (data.toolsUsed && data.toolsUsed.length > 0) {
+          const toolMsg = '🔧 Tools used: ' + data.toolsUsed.join(' → ');
+          updateMsg(loadingId, toolMsg, 'tools');
+          appendMsg('chat5-messages', 'ai', data.answer || data.reply || JSON.stringify(data), '🤖');
+        } else {
+          updateMsg(loadingId, data.answer || data.reply || JSON.stringify(data));
+        }
+      } catch (e) {
+        updateMsg(loadingId, `⚠️ Could not reach the agent API. Try again in 30 seconds.\n\n${e.message}`);
+      } finally { btn.disabled = false; }
+    }
+
+    // ══ APP 6 — VISION ══
+    function handleImageSelect(e) {
+      const file = e.target.files[0];
+      if (file) loadImage(file);
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      document.getElementById('uploadZone').classList.remove('drag-over');
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith('image/')) loadImage(file);
+    }
+
+    function loadImage(file) {
+      selectedImageFile = file;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const preview = document.getElementById('imagePreview');
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+        document.getElementById('uploadZone').style.display = 'none';
+        document.getElementById('analyze-btn').disabled = false;
+        document.getElementById('vision-result').innerHTML = '';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.querySelectorAll('.atab').forEach(t => {
+        t.classList.toggle('active', t.dataset.mode === mode);
       });
-      html += `</div>`;
+      document.getElementById('question-input-wrap').style.display =
+        mode === 'ask' ? 'block' : 'none';
+      document.getElementById('analyze-btn').textContent =
+        {
+          analyze: 'Analyse Image', 'extract-text': 'Extract Text',
+          ask: 'Get Answer', 'extract-invoice': 'Extract Invoice Data'
+        }[mode];
     }
 
-    const el = document.getElementById('rag-result');
-    el.innerHTML = html;
-    el.style.display = 'block';
-    el.classList.remove('loading');
-  } catch(e) {
-    showRAGResult(`⚠️ Error: ${e.message}`, false);
-  } finally { btn.disabled = false; }
-}
+    async function analyzeImage() {
+      if (!selectedImageFile) return;
 
-function showRAGResult(msg, loading) {
-  const el = document.getElementById('rag-result');
-  el.style.display = 'flex';
-  if (loading) {
-    el.classList.add('loading');
-    el.innerHTML = `<div class="spinner"></div><span>${msg}</span>`;
-  } else {
-    el.classList.remove('loading');
-    el.style.display = 'block';
-    el.innerHTML = msg;
-  }
-}
+      const btn = document.getElementById('analyze-btn');
+      const result = document.getElementById('vision-result');
+      btn.disabled = true;
+      btn.textContent = 'Analysing...';
 
-// ══ APP 5 — AGENT ══
-async function sendChat5() {
-  const input = document.getElementById('chat5-input');
-  const msg = input.value.trim();
-  if (!msg) return;
+      result.innerHTML = `<div class="result-box loading show"><div class="spinner"></div><span>GPT-4o is analysing your image...</span></div>`;
 
-  appendMsg('chat5-messages', 'user', msg, '👤');
-  input.value = '';
-  const btn = document.getElementById('chat5-btn');
-  btn.disabled = true;
+      try {
+        const formData = new FormData();
+        formData.append('image', selectedImageFile);
 
-  const loadingId = appendMsg('chat5-messages', 'ai', '⚙️ Agent is reasoning...', '🤖');
+        let endpoint = `${URLS.app6}/api/vision/${currentMode}`;
+        if (currentMode === 'ask') {
+          const q = document.getElementById('vision-question').value.trim();
+          if (!q) { result.innerHTML = '<div class="result-box show">Please enter a question.</div>'; return; }
+          formData.append('question', q);
+        }
 
-  try {
-    const res = await fetch(`${URLS.app5}/api/agent/chat`, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        message: msg,
-        sessionId: 'demo-web-' + getSessionId('chat5')
-      })
-    });
-    const data = await res.json();
+        const res = await fetch(endpoint, { method: 'POST', body: formData });
+        const data = await res.json();
 
-    if (data.toolsUsed && data.toolsUsed.length > 0) {
-      const toolMsg = '🔧 Tools used: ' + data.toolsUsed.join(' → ');
-      updateMsg(loadingId, toolMsg, 'tools');
-      appendMsg('chat5-messages', 'ai', data.answer || data.reply || JSON.stringify(data), '🤖');
-    } else {
-      updateMsg(loadingId, data.answer || data.reply || JSON.stringify(data));
-    }
-  } catch(e) {
-    updateMsg(loadingId, `⚠️ Could not reach the agent API. Try again in 30 seconds.\n\n${e.message}`);
-  } finally { btn.disabled = false; }
-}
-
-// ══ APP 6 — VISION ══
-function handleImageSelect(e) {
-  const file = e.target.files[0];
-  if (file) loadImage(file);
-}
-
-function handleDrop(e) {
-  e.preventDefault();
-  document.getElementById('uploadZone').classList.remove('drag-over');
-  const file = e.dataTransfer.files[0];
-  if (file && file.type.startsWith('image/')) loadImage(file);
-}
-
-function loadImage(file) {
-  selectedImageFile = file;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    const preview = document.getElementById('imagePreview');
-    preview.src = e.target.result;
-    preview.style.display = 'block';
-    document.getElementById('uploadZone').style.display = 'none';
-    document.getElementById('analyze-btn').disabled = false;
-    document.getElementById('vision-result').innerHTML = '';
-  };
-  reader.readAsDataURL(file);
-}
-
-function setMode(mode) {
-  currentMode = mode;
-  document.querySelectorAll('.atab').forEach(t => {
-    t.classList.toggle('active', t.dataset.mode === mode);
-  });
-  document.getElementById('question-input-wrap').style.display =
-    mode === 'ask' ? 'block' : 'none';
-  document.getElementById('analyze-btn').textContent =
-    { analyze:'Analyse Image', 'extract-text':'Extract Text',
-      ask:'Get Answer', 'extract-invoice':'Extract Invoice Data' }[mode];
-}
-
-async function analyzeImage() {
-  if (!selectedImageFile) return;
-
-  const btn = document.getElementById('analyze-btn');
-  const result = document.getElementById('vision-result');
-  btn.disabled = true;
-  btn.textContent = 'Analysing...';
-
-  result.innerHTML = `<div class="result-box loading show"><div class="spinner"></div><span>GPT-4o is analysing your image...</span></div>`;
-
-  try {
-    const formData = new FormData();
-    formData.append('image', selectedImageFile);
-
-    let endpoint = `${URLS.app6}/api/vision/${currentMode}`;
-    if (currentMode === 'ask') {
-      const q = document.getElementById('vision-question').value.trim();
-      if (!q) { result.innerHTML = '<div class="result-box show">Please enter a question.</div>'; return; }
-      formData.append('question', q);
+        result.innerHTML = renderVisionResult(data, currentMode);
+      } catch (e) {
+        result.innerHTML = `<div class="result-box show">⚠️ Error: ${e.message}</div>`;
+      } finally {
+        btn.disabled = false;
+        setMode(currentMode);
+      }
     }
 
-    const res = await fetch(endpoint, { method:'POST', body: formData });
-    const data = await res.json();
-
-    result.innerHTML = renderVisionResult(data, currentMode);
-  } catch(e) {
-    result.innerHTML = `<div class="result-box show">⚠️ Error: ${e.message}</div>`;
-  } finally {
-    btn.disabled = false;
-    setMode(currentMode);
-  }
-}
-
-function renderVisionResult(data, mode) {
-  if (mode === 'analyze') {
-    const tags = (data.tags||[]).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('');
-    const items = (data.detectedItems||[]).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('');
-    return `
+    function renderVisionResult(data, mode) {
+      if (mode === 'analyze') {
+        const tags = (data.tags || []).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('');
+        const items = (data.detectedItems || []).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('');
+        return `
       <div class="result-box show">
         <div class="analysis-field" style="margin-bottom:10px">
           <div class="field-label">DESCRIPTION</div>
-          <div class="field-value">${escapeHtml(data.description||'')}</div>
+          <div class="field-value">${escapeHtml(data.description || '')}</div>
         </div>
         ${data.extractedText ? `
         <div class="analysis-field" style="margin-bottom:10px">
@@ -1090,44 +1701,44 @@ function renderVisionResult(data, mode) {
         ${items ? `<div style="margin-bottom:8px"><div class="field-label" style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:6px">DETECTED ITEMS</div><div class="tag-row">${items}</div></div>` : ''}
         ${tags ? `<div><div class="field-label" style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:6px">TAGS</div><div class="tag-row">${tags}</div></div>` : ''}
       </div>`;
-  }
+      }
 
-  if (mode === 'extract-text') {
-    const text = data.extractedText || data || '';
-    return `
+      if (mode === 'extract-text') {
+        const text = data.extractedText || data || '';
+        return `
       <div class="result-box show">
         <div class="field-label" style="color:var(--text3);font-family:'DM Mono',monospace;font-size:10px;margin-bottom:8px">
-          EXTRACTED TEXT · ${(data.characterCount||text.length).toLocaleString()} characters
+          EXTRACTED TEXT · ${(data.characterCount || text.length).toLocaleString()} characters
         </div>
-        <div style="font-family:'DM Mono',monospace;font-size:13px;white-space:pre-wrap;color:var(--text2)">${escapeHtml(typeof text === 'string' ? text : (text.extractedText||JSON.stringify(text)))}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:13px;white-space:pre-wrap;color:var(--text2)">${escapeHtml(typeof text === 'string' ? text : (text.extractedText || JSON.stringify(text)))}</div>
       </div>`;
-  }
+      }
 
-  if (mode === 'ask') {
-    return `
+      if (mode === 'ask') {
+        return `
       <div class="result-box show">
         <div class="field-label" style="color:var(--text3);font-family:'DM Mono',monospace;font-size:10px;margin-bottom:8px">ANSWER</div>
-        ${escapeHtml(data.answer||data.Answer||JSON.stringify(data))}
+        ${escapeHtml(data.answer || data.Answer || JSON.stringify(data))}
       </div>`;
-  }
+      }
 
-  if (mode === 'extract-invoice') {
-    const items = data.lineItems || data.LineItems || [];
-    const rows = items.map(item => `
+      if (mode === 'extract-invoice') {
+        const items = data.lineItems || data.LineItems || [];
+        const rows = items.map(item => `
       <tr>
-        <td>${escapeHtml(item.description||item.Description||'')}</td>
-        <td style="text-align:right">${item.quantity||item.Quantity||0}</td>
-        <td style="text-align:right">₹${(item.unitPrice||item.UnitPrice||0).toLocaleString()}</td>
-        <td style="text-align:right">₹${(item.total||item.Total||0).toLocaleString()}</td>
+        <td>${escapeHtml(item.description || item.Description || '')}</td>
+        <td style="text-align:right">${item.quantity || item.Quantity || 0}</td>
+        <td style="text-align:right">₹${(item.unitPrice || item.UnitPrice || 0).toLocaleString()}</td>
+        <td style="text-align:right">₹${(item.total || item.Total || 0).toLocaleString()}</td>
       </tr>`).join('');
 
-    return `
+        return `
       <div class="result-box show">
         <div class="analysis-grid" style="margin-bottom:12px">
-          <div class="analysis-field"><div class="field-label">VENDOR</div><div class="field-value">${escapeHtml(data.vendorName||data.VendorName||'—')}</div></div>
-          <div class="analysis-field"><div class="field-label">INVOICE NO.</div><div class="field-value">${escapeHtml(data.invoiceNumber||data.InvoiceNumber||'—')}</div></div>
-          <div class="analysis-field"><div class="field-label">DATE</div><div class="field-value">${escapeHtml(data.invoiceDate||data.InvoiceDate||'—')}</div></div>
-          <div class="analysis-field"><div class="field-label">CURRENCY</div><div class="field-value">${escapeHtml(data.currency||data.Currency||'INR')}</div></div>
+          <div class="analysis-field"><div class="field-label">VENDOR</div><div class="field-value">${escapeHtml(data.vendorName || data.VendorName || '—')}</div></div>
+          <div class="analysis-field"><div class="field-label">INVOICE NO.</div><div class="field-value">${escapeHtml(data.invoiceNumber || data.InvoiceNumber || '—')}</div></div>
+          <div class="analysis-field"><div class="field-label">DATE</div><div class="field-value">${escapeHtml(data.invoiceDate || data.InvoiceDate || '—')}</div></div>
+          <div class="analysis-field"><div class="field-label">CURRENCY</div><div class="field-value">${escapeHtml(data.currency || data.Currency || 'INR')}</div></div>
         </div>
         ${rows ? `
         <table class="invoice-table">
@@ -1135,513 +1746,514 @@ function renderVisionResult(data, mode) {
           <tbody>
             ${rows}
             <tr class="total-row">
-              <td colspan="3">Subtotal</td><td style="text-align:right">₹${(data.subtotal||data.Subtotal||0).toLocaleString()}</td>
+              <td colspan="3">Subtotal</td><td style="text-align:right">₹${(data.subtotal || data.Subtotal || 0).toLocaleString()}</td>
             </tr>
             <tr class="total-row">
-              <td colspan="3">Tax</td><td style="text-align:right">₹${(data.taxAmount||data.TaxAmount||0).toLocaleString()}</td>
+              <td colspan="3">Tax</td><td style="text-align:right">₹${(data.taxAmount || data.TaxAmount || 0).toLocaleString()}</td>
             </tr>
             <tr class="total-row" style="background:var(--golddim)">
               <td colspan="3" style="color:var(--gold)"><strong>Total</strong></td>
-              <td style="text-align:right;color:var(--gold)"><strong>₹${(data.totalAmount||data.TotalAmount||0).toLocaleString()}</strong></td>
+              <td style="text-align:right;color:var(--gold)"><strong>₹${(data.totalAmount || data.TotalAmount || 0).toLocaleString()}</strong></td>
             </tr>
           </tbody>
         </table>` : '<div style="color:var(--text3)">No line items detected.</div>'}
-        ${data.notes||data.Notes ? `<div style="margin-top:10px;font-size:12px;color:var(--text3)">${escapeHtml(data.notes||data.Notes)}</div>` : ''}
+        ${data.notes || data.Notes ? `<div style="margin-top:10px;font-size:12px;color:var(--text3)">${escapeHtml(data.notes || data.Notes)}</div>` : ''}
       </div>`;
-  }
+      }
 
-  return `<div class="result-box show"><pre class="json-display">${JSON.stringify(data, null, 2)}</pre></div>`;
-}
+      return `<div class="result-box show"><pre class="json-display">${JSON.stringify(data, null, 2)}</pre></div>`;
+    }
 
-// ── CHAT HELPERS ──
-let msgCounter = 0;
-function appendMsg(containerId, type, text, avatar) {
-  const id = 'msg-' + (++msgCounter);
-  const container = document.getElementById(containerId);
-  const div = document.createElement('div');
-  div.className = `msg ${type}`;
-  div.id = id;
-  div.innerHTML = `
-    <div class="msg-avatar">${avatar||'🤖'}</div>
+    // ── CHAT HELPERS ──
+    let msgCounter = 0;
+    function appendMsg(containerId, type, text, avatar) {
+      const id = 'msg-' + (++msgCounter);
+      const container = document.getElementById(containerId);
+      const div = document.createElement('div');
+      div.className = `msg ${type}`;
+      div.id = id;
+      div.innerHTML = `
+    <div class="msg-avatar">${avatar || '🤖'}</div>
     <div class="msg-bubble">${escapeHtml(text)}</div>`;
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
-  return id;
-}
-
-function updateMsg(id, text, type='ai') {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.className = `msg ${type}`;
-  el.querySelector('.msg-bubble').textContent = text;
-  el.closest('.chat-messages').scrollTop = 99999;
-}
-
-// ── UTILS ──
-function escapeHtml(str) {
-  if (typeof str !== 'string') return String(str||'');
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-const sessions = {};
-function getSessionId(key) {
-  if (!sessions[key]) sessions[key] = Math.random().toString(36).slice(2,9);
-  return sessions[key];
-}
-
-// Auto-resize textareas
-document.querySelectorAll('textarea').forEach(ta => {
-  ta.addEventListener('input', () => {
-    ta.style.height = 'auto';
-    ta.style.height = Math.min(ta.scrollHeight, 120) + 'px';
-  });
-});
-
-// ══ APP 7 — VOICE AI ══
-let mediaRecorder = null;
-let audioChunks = [];
-let isRecording = false;
-let recordTimer = null;
-let recordSeconds = 0;
-let uploadedAudioFile = null;
-let currentVoiceMode = 'record';
-
-function setVoiceMode(mode) {
-  currentVoiceMode = mode;
-  document.querySelectorAll('[data-vmode]').forEach(t => {
-    const isActive = t.dataset.vmode === mode;
-    t.classList.toggle('active', isActive);
-    if (isActive) {
-      t.style.borderColor = 'var(--teal)';
-      t.style.background = 'var(--tealdim)';
-      t.style.color = 'var(--teal)';
-    } else {
-      t.style.borderColor = '';
-      t.style.background = '';
-      t.style.color = '';
-    }
-  });
-  document.getElementById('voice-record-mode').style.display = mode === 'record' ? 'block' : 'none';
-  document.getElementById('voice-upload-mode').style.display = mode === 'upload' ? 'block' : 'none';
-  document.getElementById('voice-tts-mode').style.display = mode === 'tts' ? 'block' : 'none';
-  document.getElementById('voice-result').style.display = 'none';
-}
-
-async function toggleRecording() {
-  if (!isRecording) {
-    await startRecording();
-  } else {
-    stopRecording();
-  }
-}
-
-async function startRecording() {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    mediaRecorder = new MediaRecorder(stream);
-    audioChunks = [];
-    isRecording = true;
-
-    mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
-    mediaRecorder.onstop = async () => {
-      const blob = new Blob(audioChunks, { type: 'audio/webm' });
-      stream.getTracks().forEach(t => t.stop());
-      await sendAudioToVoiceAPI(blob, 'recording.webm');
-    };
-
-    mediaRecorder.start(100);
-
-    // Update UI
-    const btn = document.getElementById('record-btn');
-    btn.textContent = '⏹️';
-    btn.style.borderColor = 'var(--coral)';
-    btn.style.background = 'var(--coraldim)';
-    btn.style.color = 'var(--coral)';
-    btn.style.animation = 'pulse 1s ease-in-out infinite';
-    document.getElementById('record-status').textContent = 'Recording... click to stop';
-    document.getElementById('record-status').style.color = 'var(--coral)';
-    document.getElementById('record-timer').style.display = 'block';
-
-    // Timer
-    recordSeconds = 0;
-    recordTimer = setInterval(() => {
-      recordSeconds++;
-      const m = Math.floor(recordSeconds / 60);
-      const s = recordSeconds % 60;
-      document.getElementById('record-timer').textContent = `${m}:${s.toString().padStart(2,'0')}`;
-      if (recordSeconds >= 60) stopRecording(); // max 60 seconds
-    }, 1000);
-
-  } catch(e) {
-    document.getElementById('record-status').textContent = '⚠️ Microphone access denied. Please allow microphone access and try again.';
-    document.getElementById('record-status').style.color = 'var(--coral)';
-  }
-}
-
-function stopRecording() {
-  if (mediaRecorder && isRecording) {
-    mediaRecorder.stop();
-    isRecording = false;
-    clearInterval(recordTimer);
-
-    const btn = document.getElementById('record-btn');
-    btn.textContent = '🎤';
-    btn.style.borderColor = 'var(--teal)';
-    btn.style.background = 'var(--tealdim)';
-    btn.style.color = 'var(--teal)';
-    btn.style.animation = '';
-    document.getElementById('record-status').textContent = 'Processing your voice...';
-    document.getElementById('record-status').style.color = 'var(--text2)';
-    document.getElementById('record-timer').style.display = 'none';
-  }
-}
-
-function handleAudioUpload(e) {
-  uploadedAudioFile = e.target.files[0];
-  if (uploadedAudioFile) {
-    document.getElementById('upload-ask-btn').disabled = false;
-    document.getElementById('upload-ask-btn').textContent = `Send "${uploadedAudioFile.name}" to AI`;
-  }
-}
-
-async function sendUploadedAudio() {
-  if (!uploadedAudioFile) return;
-  await sendAudioToVoiceAPI(uploadedAudioFile, uploadedAudioFile.name);
-}
-
-async function sendAudioToVoiceAPI(audioBlob, fileName) {
-  const voice = document.getElementById('voice-select').value;
-
-  // Show result area with loading
-  const resultEl = document.getElementById('voice-result');
-  resultEl.style.display = 'block';
-  document.getElementById('voice-transcript-box').style.display = 'none';
-  document.getElementById('voice-answer-box').style.display = 'none';
-  document.getElementById('voice-audio-box').style.display = 'none';
-  document.getElementById('voice-loading').style.display = 'block';
-  document.getElementById('voice-loading-text').textContent = 'Stage 1: Whisper is transcribing your audio...';
-
-  try {
-    const formData = new FormData();
-    formData.append('audio', audioBlob, fileName);
-    formData.append('voice', voice);
-
-    const res = await fetch(`${URLS.app7}/api/voice/ask`, {
-      method: 'POST',
-      body: formData
-    });
-
-    document.getElementById('voice-loading-text').textContent = 'Stage 2 & 3: AI is generating and speaking the answer...';
-
-    const data = await res.json();
-
-    // Hide loading
-    document.getElementById('voice-loading').style.display = 'none';
-
-    // Show transcript
-    if (data.userTranscript) {
-      document.getElementById('voice-transcript-text').textContent = data.userTranscript;
-      document.getElementById('voice-transcript-box').style.display = 'block';
+      container.appendChild(div);
+      container.scrollTop = container.scrollHeight;
+      return id;
     }
 
-    // Show answer text
-    if (data.answer) {
-      document.getElementById('voice-answer-text').textContent = data.answer;
-      document.getElementById('voice-answer-box').style.display = 'block';
+    function updateMsg(id, text, type = 'ai') {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.className = `msg ${type}`;
+      el.querySelector('.msg-bubble').textContent = text;
+      el.closest('.chat-messages').scrollTop = 99999;
     }
 
-    // Play audio response
-    if (data.answerAudioBase64) {
-      const audioSrc = `data:audio/${data.audioFormat || 'mp3'};base64,${data.answerAudioBase64}`;
-      const player = document.getElementById('voice-audio-player');
-      player.src = audioSrc;
-      document.getElementById('voice-audio-box').style.display = 'block';
-      player.play().catch(() => {}); // autoplay may be blocked — that's fine
+    // ── UTILS ──
+    function escapeHtml(str) {
+      if (typeof str !== 'string') return String(str || '');
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
 
-    // Reset record button text
-    document.getElementById('record-status').textContent = 'Click to record again';
-
-  } catch(e) {
-    document.getElementById('voice-loading').style.display = 'none';
-    document.getElementById('voice-transcript-box').style.display = 'block';
-    document.getElementById('voice-transcript-text').textContent = `⚠️ Error: ${e.message}. The Azure app may be sleeping — try again in 30 seconds.`;
-    document.getElementById('record-status').textContent = 'Click to record again';
-  }
-}
-
-async function convertTextToSpeech() {
-  const text = document.getElementById('tts-text').value.trim();
-  if (!text) return;
-
-  const voice = document.getElementById('voice-select').value;
-  const resultEl = document.getElementById('voice-result');
-  resultEl.style.display = 'block';
-  document.getElementById('voice-transcript-box').style.display = 'none';
-  document.getElementById('voice-answer-box').style.display = 'none';
-  document.getElementById('voice-audio-box').style.display = 'none';
-  document.getElementById('voice-loading').style.display = 'block';
-  document.getElementById('voice-loading-text').textContent = 'Generating speech...';
-
-  try {
-    const res = await fetch(`${URLS.app7}/api/voice/speak`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text, voice })
-    });
-
-    const data = await res.json();
-    document.getElementById('voice-loading').style.display = 'none';
-
-    if (data.audioBase64) {
-      const audioSrc = `data:audio/mp3;base64,${data.audioBase64}`;
-      const player = document.getElementById('voice-audio-player');
-      player.src = audioSrc;
-      document.getElementById('voice-audio-box').style.display = 'block';
-      player.play().catch(() => {});
+    const sessions = {};
+    function getSessionId(key) {
+      if (!sessions[key]) sessions[key] = Math.random().toString(36).slice(2, 9);
+      return sessions[key];
     }
-  } catch(e) {
-    document.getElementById('voice-loading').style.display = 'none';
-    alert(`Error: ${e.message}`);
-  }
-}
 
-// ══ APP 7.5 — MULTI-AGENT REASONING ══
-let agentConnection = null;
-
-function agentSetLaneState(role, state, text) {
-  const lane = document.querySelector(`.agent-lane[data-role="${role}"]`);
-  lane.dataset.state = state;
-  lane.querySelector('.agent-status-text').textContent = text;
-}
-
-async function ensureAgentConnection() {
-  if (agentConnection) return agentConnection;
-  agentConnection = new signalR.HubConnectionBuilder()
-    .withUrl(`${URLS.app75}/hubs/agent-reasoning`, { withCredentials: false })
-    .withAutomaticReconnect()
-    .build();
-
-  agentConnection.on('ReceiveAgentUpdate', (update) => {
-    const roleKey = update.role.toLowerCase();
-    const bodyEl = document.getElementById(`agent-body-${roleKey}`);
-    if (bodyEl) bodyEl.textContent = update.content;
-    agentSetLaneState(roleKey, 'done', 'Done');
-
-    const nextByStep = { 1: 'critic', 2: 'synthesizer', 3: null };
-    const next = nextByStep[update.step];
-    if (next) agentSetLaneState(next, 'active', 'Thinking');
-
-    if (update.isFinal) {
-      const btn = document.getElementById('agent-ask-btn');
-      btn.disabled = false;
-      btn.textContent = 'Ask the panel';
-    }
-  });
-
-  await agentConnection.start();
-  return agentConnection;
-}
-
-async function askAgentPanel() {
-  const input = document.getElementById('agent-question');
-  const question = input.value.trim();
-  if (!question) return;
-
-  const btn = document.getElementById('agent-ask-btn');
-  btn.disabled = true;
-  btn.textContent = 'Reasoning…';
-
-  ['researcher', 'critic', 'synthesizer'].forEach(role => {
-    document.getElementById(`agent-body-${role}`).textContent = '';
-    agentSetLaneState(role, 'idle', 'Waiting');
-  });
-  agentSetLaneState('researcher', 'active', 'Thinking');
-
-  try {
-    const conn = await ensureAgentConnection();
-    const sessionId = 'demo-web-' + Date.now();
-    await conn.invoke('JoinSession', sessionId);
-
-    const res = await fetch(`${URLS.app75}/api/agent/ask`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question, sessionId })
-    });
-    if (!res.ok) throw new Error('Request failed');
-  } catch (e) {
-    btn.disabled = false;
-    btn.textContent = 'Ask the panel';
-    ['researcher', 'critic', 'synthesizer'].forEach(role => agentSetLaneState(role, 'idle', 'Waiting'));
-    alert(`⚠️ Could not reach the API: ${e.message}. The Azure app may be sleeping — try again in 30 seconds.`);
-  }
-}
-
-// ══ APP 8 — LIVE VOICE COMPANION ══
-let vcConnection = null;
-let vcSessionId = crypto.randomUUID();
-let vcIsListening = false;
-let vcIsProcessing = false;
-let vcFinalTranscript = '';
-let vcSilenceTimer = null;
-
-const VcSpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-let vcRecognition = null;
-if (VcSpeechRecognition) {
-  vcRecognition = new VcSpeechRecognition();
-  vcRecognition.continuous = true;
-  vcRecognition.interimResults = true;
-  vcRecognition.lang = 'en-US';
-
-  vcRecognition.onresult = (event) => {
-    vcFinalTranscript = '';
-    for (let i = 0; i < event.results.length; i++) {
-      vcFinalTranscript += event.results[i][0].transcript;
-    }
-    document.getElementById('vc-transcript-box').style.display = 'block';
-    document.getElementById('vc-transcript-text').textContent = vcFinalTranscript;
-
-    clearTimeout(vcSilenceTimer);
-    vcSilenceTimer = setTimeout(() => {
-      if (vcIsListening) vcToggleMic();
-    }, 3000);
-  };
-
-  // We no longer wait on 'end' to submit -- Chrome can take many seconds to
-  // fire it after stop()/abort() on a continuous session, which is what was
-  // causing the long dead pause. vcSubmitQuestion() below runs immediately
-  // instead. This stays as a harmless no-op safety net.
-  vcRecognition.onend = () => {};
-
-  vcRecognition.onerror = (event) => {
-    if (event.error === 'aborted') return; // expected -- we call abort() ourselves
-    vcIsProcessing = false;
-    const btn = document.getElementById('vc-mic-btn');
-    btn.disabled = false;
-    btn.classList.remove('thinking');
-    document.getElementById('vc-status').textContent = 'Error: ' + event.error;
-  };
-} else {
-  document.addEventListener('DOMContentLoaded', () => {
-    const btn = document.getElementById('vc-mic-btn');
-    if (btn) btn.disabled = true;
-    const status = document.getElementById('vc-status');
-    if (status) status.textContent = 'Speech recognition not supported — use Chrome or Edge.';
-  });
-}
-
-async function vcEnsureConnection() {
-  if (vcConnection) return vcConnection;
-  vcConnection = new signalR.HubConnectionBuilder()
-    .withUrl(`${URLS.app8}/hubs/voice-chat`, { withCredentials: false })
-    .withAutomaticReconnect()
-    .build();
-
-  vcConnection.on('ReceiveChatChunk', (update) => {
-    if (update.isFinal) {
-      document.getElementById('vc-status').textContent = 'AI finished. Click the mic to talk again.';
-      vcIsProcessing = false;
-      const btn = document.getElementById('vc-mic-btn');
-      btn.disabled = false;
-      btn.classList.remove('thinking');
-      return;
-    }
-    document.getElementById('vc-answer-text').textContent += update.textChunk;
-  });
-
-  await vcConnection.start();
-  return vcConnection;
-}
-
-// NEW: the actual submit logic, now triggered directly by the stop click /
-// auto-stop timer instead of by recognition.onend -- this is what removes
-// the 17-second dead wait.
-function vcSubmitQuestion() {
-  if (!vcFinalTranscript.trim()) return;
-
-  document.getElementById('vc-status').textContent = 'Thinking…';
-  vcIsProcessing = true;
-  const btn = document.getElementById('vc-mic-btn');
-  btn.disabled = true;
-  btn.classList.add('thinking');
-
-  (async () => {
-    try {
-      const conn = await vcEnsureConnection();
-      await conn.invoke('JoinSession', vcSessionId);
-
-      document.getElementById('vc-answer-box').style.display = 'block';
-      document.getElementById('vc-answer-text').textContent = '';
-
-      await fetch(`${URLS.app8}/api/voicechat/send`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionId: vcSessionId, userMessage: vcFinalTranscript })
+    // Auto-resize textareas
+    document.querySelectorAll('textarea').forEach(ta => {
+      ta.addEventListener('input', () => {
+        ta.style.height = 'auto';
+        ta.style.height = Math.min(ta.scrollHeight, 120) + 'px';
       });
-    } catch (e) {
-      vcIsProcessing = false;
-      btn.disabled = false;
-      btn.classList.remove('thinking');
-      document.getElementById('vc-status').textContent = `⚠️ Could not reach the API: ${e.message}. The Azure app may be sleeping — try again in 30 seconds.`;
+    });
+
+    // ══ APP 7 — VOICE AI ══
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let isRecording = false;
+    let recordTimer = null;
+    let recordSeconds = 0;
+    let uploadedAudioFile = null;
+    let currentVoiceMode = 'record';
+
+    function setVoiceMode(mode) {
+      currentVoiceMode = mode;
+      document.querySelectorAll('[data-vmode]').forEach(t => {
+        const isActive = t.dataset.vmode === mode;
+        t.classList.toggle('active', isActive);
+        if (isActive) {
+          t.style.borderColor = 'var(--teal)';
+          t.style.background = 'var(--tealdim)';
+          t.style.color = 'var(--teal)';
+        } else {
+          t.style.borderColor = '';
+          t.style.background = '';
+          t.style.color = '';
+        }
+      });
+      document.getElementById('voice-record-mode').style.display = mode === 'record' ? 'block' : 'none';
+      document.getElementById('voice-upload-mode').style.display = mode === 'upload' ? 'block' : 'none';
+      document.getElementById('voice-tts-mode').style.display = mode === 'tts' ? 'block' : 'none';
+      document.getElementById('voice-result').style.display = 'none';
     }
-  })();
-}
 
-function vcToggleMic() {
-  if (vcIsProcessing || !vcRecognition) return;
-  const btn = document.getElementById('vc-mic-btn');
-
-  if (!vcIsListening) {
-    vcIsListening = true;
-    vcFinalTranscript = '';
-    btn.classList.add('listening');
-    btn.textContent = '⏹';
-    document.getElementById('vc-status').textContent = 'Listening… click again when done.';
-    document.getElementById('vc-transcript-box').style.display = 'none';
-    document.getElementById('vc-answer-box').style.display = 'none';
-    try {
-      vcRecognition.start();
-    } catch (e) {
-      vcIsListening = false;
-      document.getElementById('vc-status').textContent = 'Please wait a moment and click the mic again.';
+    async function toggleRecording() {
+      if (!isRecording) {
+        await startRecording();
+      } else {
+        stopRecording();
+      }
     }
-  } else {
-    vcIsListening = false;
-    btn.classList.remove('listening');
-    btn.textContent = '🎤';
-    clearTimeout(vcSilenceTimer);
-    vcRecognition.abort();   // don't wait for Chrome's slow finalization
-    vcSubmitQuestion();      // submit right away with what we already captured
-  }
-}
 
-function vcResetConversation() {
-  vcSessionId = crypto.randomUUID();
-  vcFinalTranscript = '';
-  document.getElementById('vc-transcript-box').style.display = 'none';
-  document.getElementById('vc-answer-box').style.display = 'none';
-  document.getElementById('vc-status').textContent = 'New conversation started.';
-}
+    async function startRecording() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+        isRecording = true;
 
-function handleHashNavigation() {
-  const hash = window.location.hash; // e.g. "#app4"
-  if (!hash) return; // no hash — default App 3 stays selected
+        mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
+        mediaRecorder.onstop = async () => {
+          const blob = new Blob(audioChunks, { type: 'audio/webm' });
+          stream.getTracks().forEach(t => t.stop());
+          await sendAudioToVoiceAPI(blob, 'recording.webm');
+        };
 
-  const appNum = hash.replace('#app', ''); // "4"
-  const validApps = ['3', '4', '5', '6', '7','75', '8'];
+        mediaRecorder.start(100);
 
-  if (validApps.includes(appNum)) {
-    switchApp(parseInt(appNum));
-  }
-}
+        // Update UI
+        const btn = document.getElementById('record-btn');
+        btn.textContent = '⏹️';
+        btn.style.borderColor = 'var(--coral)';
+        btn.style.background = 'var(--coraldim)';
+        btn.style.color = 'var(--coral)';
+        btn.style.animation = 'pulse 1s ease-in-out infinite';
+        document.getElementById('record-status').textContent = 'Recording... click to stop';
+        document.getElementById('record-status').style.color = 'var(--coral)';
+        document.getElementById('record-timer').style.display = 'block';
 
-// Run on page load
-window.addEventListener('load', handleHashNavigation);
+        // Timer
+        recordSeconds = 0;
+        recordTimer = setInterval(() => {
+          recordSeconds++;
+          const m = Math.floor(recordSeconds / 60);
+          const s = recordSeconds % 60;
+          document.getElementById('record-timer').textContent = `${m}:${s.toString().padStart(2, '0')}`;
+          if (recordSeconds >= 60) stopRecording(); // max 60 seconds
+        }, 1000);
 
-// Also run if user navigates back/forward in browser
-window.addEventListener('hashchange', handleHashNavigation);
+      } catch (e) {
+        document.getElementById('record-status').textContent = '⚠️ Microphone access denied. Please allow microphone access and try again.';
+        document.getElementById('record-status').style.color = 'var(--coral)';
+      }
+    }
 
-</script>
+    function stopRecording() {
+      if (mediaRecorder && isRecording) {
+        mediaRecorder.stop();
+        isRecording = false;
+        clearInterval(recordTimer);
+
+        const btn = document.getElementById('record-btn');
+        btn.textContent = '🎤';
+        btn.style.borderColor = 'var(--teal)';
+        btn.style.background = 'var(--tealdim)';
+        btn.style.color = 'var(--teal)';
+        btn.style.animation = '';
+        document.getElementById('record-status').textContent = 'Processing your voice...';
+        document.getElementById('record-status').style.color = 'var(--text2)';
+        document.getElementById('record-timer').style.display = 'none';
+      }
+    }
+
+    function handleAudioUpload(e) {
+      uploadedAudioFile = e.target.files[0];
+      if (uploadedAudioFile) {
+        document.getElementById('upload-ask-btn').disabled = false;
+        document.getElementById('upload-ask-btn').textContent = `Send "${uploadedAudioFile.name}" to AI`;
+      }
+    }
+
+    async function sendUploadedAudio() {
+      if (!uploadedAudioFile) return;
+      await sendAudioToVoiceAPI(uploadedAudioFile, uploadedAudioFile.name);
+    }
+
+    async function sendAudioToVoiceAPI(audioBlob, fileName) {
+      const voice = document.getElementById('voice-select').value;
+
+      // Show result area with loading
+      const resultEl = document.getElementById('voice-result');
+      resultEl.style.display = 'block';
+      document.getElementById('voice-transcript-box').style.display = 'none';
+      document.getElementById('voice-answer-box').style.display = 'none';
+      document.getElementById('voice-audio-box').style.display = 'none';
+      document.getElementById('voice-loading').style.display = 'block';
+      document.getElementById('voice-loading-text').textContent = 'Stage 1: Whisper is transcribing your audio...';
+
+      try {
+        const formData = new FormData();
+        formData.append('audio', audioBlob, fileName);
+        formData.append('voice', voice);
+
+        const res = await fetch(`${URLS.app7}/api/voice/ask`, {
+          method: 'POST',
+          body: formData
+        });
+
+        document.getElementById('voice-loading-text').textContent = 'Stage 2 & 3: AI is generating and speaking the answer...';
+
+        const data = await res.json();
+
+        // Hide loading
+        document.getElementById('voice-loading').style.display = 'none';
+
+        // Show transcript
+        if (data.userTranscript) {
+          document.getElementById('voice-transcript-text').textContent = data.userTranscript;
+          document.getElementById('voice-transcript-box').style.display = 'block';
+        }
+
+        // Show answer text
+        if (data.answer) {
+          document.getElementById('voice-answer-text').textContent = data.answer;
+          document.getElementById('voice-answer-box').style.display = 'block';
+        }
+
+        // Play audio response
+        if (data.answerAudioBase64) {
+          const audioSrc = `data:audio/${data.audioFormat || 'mp3'};base64,${data.answerAudioBase64}`;
+          const player = document.getElementById('voice-audio-player');
+          player.src = audioSrc;
+          document.getElementById('voice-audio-box').style.display = 'block';
+          player.play().catch(() => { }); // autoplay may be blocked — that's fine
+        }
+
+        // Reset record button text
+        document.getElementById('record-status').textContent = 'Click to record again';
+
+      } catch (e) {
+        document.getElementById('voice-loading').style.display = 'none';
+        document.getElementById('voice-transcript-box').style.display = 'block';
+        document.getElementById('voice-transcript-text').textContent = `⚠️ Error: ${e.message}. The Azure app may be sleeping — try again in 30 seconds.`;
+        document.getElementById('record-status').textContent = 'Click to record again';
+      }
+    }
+
+    async function convertTextToSpeech() {
+      const text = document.getElementById('tts-text').value.trim();
+      if (!text) return;
+
+      const voice = document.getElementById('voice-select').value;
+      const resultEl = document.getElementById('voice-result');
+      resultEl.style.display = 'block';
+      document.getElementById('voice-transcript-box').style.display = 'none';
+      document.getElementById('voice-answer-box').style.display = 'none';
+      document.getElementById('voice-audio-box').style.display = 'none';
+      document.getElementById('voice-loading').style.display = 'block';
+      document.getElementById('voice-loading-text').textContent = 'Generating speech...';
+
+      try {
+        const res = await fetch(`${URLS.app7}/api/voice/speak`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text, voice })
+        });
+
+        const data = await res.json();
+        document.getElementById('voice-loading').style.display = 'none';
+
+        if (data.audioBase64) {
+          const audioSrc = `data:audio/mp3;base64,${data.audioBase64}`;
+          const player = document.getElementById('voice-audio-player');
+          player.src = audioSrc;
+          document.getElementById('voice-audio-box').style.display = 'block';
+          player.play().catch(() => { });
+        }
+      } catch (e) {
+        document.getElementById('voice-loading').style.display = 'none';
+        alert(`Error: ${e.message}`);
+      }
+    }
+
+    // ══ APP 7.5 — MULTI-AGENT REASONING ══
+    let agentConnection = null;
+
+    function agentSetLaneState(role, state, text) {
+      const lane = document.querySelector(`.agent-lane[data-role="${role}"]`);
+      lane.dataset.state = state;
+      lane.querySelector('.agent-status-text').textContent = text;
+    }
+
+    async function ensureAgentConnection() {
+      if (agentConnection) return agentConnection;
+      agentConnection = new signalR.HubConnectionBuilder()
+        .withUrl(`${URLS.app75}/hubs/agent-reasoning`, { withCredentials: false })
+        .withAutomaticReconnect()
+        .build();
+
+      agentConnection.on('ReceiveAgentUpdate', (update) => {
+        const roleKey = update.role.toLowerCase();
+        const bodyEl = document.getElementById(`agent-body-${roleKey}`);
+        if (bodyEl) bodyEl.textContent = update.content;
+        agentSetLaneState(roleKey, 'done', 'Done');
+
+        const nextByStep = { 1: 'critic', 2: 'synthesizer', 3: null };
+        const next = nextByStep[update.step];
+        if (next) agentSetLaneState(next, 'active', 'Thinking');
+
+        if (update.isFinal) {
+          const btn = document.getElementById('agent-ask-btn');
+          btn.disabled = false;
+          btn.textContent = 'Ask the panel';
+        }
+      });
+
+      await agentConnection.start();
+      return agentConnection;
+    }
+
+    async function askAgentPanel() {
+      const input = document.getElementById('agent-question');
+      const question = input.value.trim();
+      if (!question) return;
+
+      const btn = document.getElementById('agent-ask-btn');
+      btn.disabled = true;
+      btn.textContent = 'Reasoning…';
+
+      ['researcher', 'critic', 'synthesizer'].forEach(role => {
+        document.getElementById(`agent-body-${role}`).textContent = '';
+        agentSetLaneState(role, 'idle', 'Waiting');
+      });
+      agentSetLaneState('researcher', 'active', 'Thinking');
+
+      try {
+        const conn = await ensureAgentConnection();
+        const sessionId = 'demo-web-' + Date.now();
+        await conn.invoke('JoinSession', sessionId);
+
+        const res = await fetch(`${URLS.app75}/api/agent/ask`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question, sessionId })
+        });
+        if (!res.ok) throw new Error('Request failed');
+      } catch (e) {
+        btn.disabled = false;
+        btn.textContent = 'Ask the panel';
+        ['researcher', 'critic', 'synthesizer'].forEach(role => agentSetLaneState(role, 'idle', 'Waiting'));
+        alert(`⚠️ Could not reach the API: ${e.message}. The Azure app may be sleeping — try again in 30 seconds.`);
+      }
+    }
+
+    // ══ APP 8 — LIVE VOICE COMPANION ══
+    let vcConnection = null;
+    let vcSessionId = crypto.randomUUID();
+    let vcIsListening = false;
+    let vcIsProcessing = false;
+    let vcFinalTranscript = '';
+    let vcSilenceTimer = null;
+
+    const VcSpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let vcRecognition = null;
+    if (VcSpeechRecognition) {
+      vcRecognition = new VcSpeechRecognition();
+      vcRecognition.continuous = true;
+      vcRecognition.interimResults = true;
+      vcRecognition.lang = 'en-US';
+
+      vcRecognition.onresult = (event) => {
+        vcFinalTranscript = '';
+        for (let i = 0; i < event.results.length; i++) {
+          vcFinalTranscript += event.results[i][0].transcript;
+        }
+        document.getElementById('vc-transcript-box').style.display = 'block';
+        document.getElementById('vc-transcript-text').textContent = vcFinalTranscript;
+
+        clearTimeout(vcSilenceTimer);
+        vcSilenceTimer = setTimeout(() => {
+          if (vcIsListening) vcToggleMic();
+        }, 3000);
+      };
+
+      // We no longer wait on 'end' to submit -- Chrome can take many seconds to
+      // fire it after stop()/abort() on a continuous session, which is what was
+      // causing the long dead pause. vcSubmitQuestion() below runs immediately
+      // instead. This stays as a harmless no-op safety net.
+      vcRecognition.onend = () => { };
+
+      vcRecognition.onerror = (event) => {
+        if (event.error === 'aborted') return; // expected -- we call abort() ourselves
+        vcIsProcessing = false;
+        const btn = document.getElementById('vc-mic-btn');
+        btn.disabled = false;
+        btn.classList.remove('thinking');
+        document.getElementById('vc-status').textContent = 'Error: ' + event.error;
+      };
+    } else {
+      document.addEventListener('DOMContentLoaded', () => {
+        const btn = document.getElementById('vc-mic-btn');
+        if (btn) btn.disabled = true;
+        const status = document.getElementById('vc-status');
+        if (status) status.textContent = 'Speech recognition not supported — use Chrome or Edge.';
+      });
+    }
+
+    async function vcEnsureConnection() {
+      if (vcConnection) return vcConnection;
+      vcConnection = new signalR.HubConnectionBuilder()
+        .withUrl(`${URLS.app8}/hubs/voice-chat`, { withCredentials: false })
+        .withAutomaticReconnect()
+        .build();
+
+      vcConnection.on('ReceiveChatChunk', (update) => {
+        if (update.isFinal) {
+          document.getElementById('vc-status').textContent = 'AI finished. Click the mic to talk again.';
+          vcIsProcessing = false;
+          const btn = document.getElementById('vc-mic-btn');
+          btn.disabled = false;
+          btn.classList.remove('thinking');
+          return;
+        }
+        document.getElementById('vc-answer-text').textContent += update.textChunk;
+      });
+
+      await vcConnection.start();
+      return vcConnection;
+    }
+
+    // NEW: the actual submit logic, now triggered directly by the stop click /
+    // auto-stop timer instead of by recognition.onend -- this is what removes
+    // the 17-second dead wait.
+    function vcSubmitQuestion() {
+      if (!vcFinalTranscript.trim()) return;
+
+      document.getElementById('vc-status').textContent = 'Thinking…';
+      vcIsProcessing = true;
+      const btn = document.getElementById('vc-mic-btn');
+      btn.disabled = true;
+      btn.classList.add('thinking');
+
+      (async () => {
+        try {
+          const conn = await vcEnsureConnection();
+          await conn.invoke('JoinSession', vcSessionId);
+
+          document.getElementById('vc-answer-box').style.display = 'block';
+          document.getElementById('vc-answer-text').textContent = '';
+
+          await fetch(`${URLS.app8}/api/voicechat/send`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sessionId: vcSessionId, userMessage: vcFinalTranscript })
+          });
+        } catch (e) {
+          vcIsProcessing = false;
+          btn.disabled = false;
+          btn.classList.remove('thinking');
+          document.getElementById('vc-status').textContent = `⚠️ Could not reach the API: ${e.message}. The Azure app may be sleeping — try again in 30 seconds.`;
+        }
+      })();
+    }
+
+    function vcToggleMic() {
+      if (vcIsProcessing || !vcRecognition) return;
+      const btn = document.getElementById('vc-mic-btn');
+
+      if (!vcIsListening) {
+        vcIsListening = true;
+        vcFinalTranscript = '';
+        btn.classList.add('listening');
+        btn.textContent = '⏹';
+        document.getElementById('vc-status').textContent = 'Listening… click again when done.';
+        document.getElementById('vc-transcript-box').style.display = 'none';
+        document.getElementById('vc-answer-box').style.display = 'none';
+        try {
+          vcRecognition.start();
+        } catch (e) {
+          vcIsListening = false;
+          document.getElementById('vc-status').textContent = 'Please wait a moment and click the mic again.';
+        }
+      } else {
+        vcIsListening = false;
+        btn.classList.remove('listening');
+        btn.textContent = '🎤';
+        clearTimeout(vcSilenceTimer);
+        vcRecognition.abort();   // don't wait for Chrome's slow finalization
+        vcSubmitQuestion();      // submit right away with what we already captured
+      }
+    }
+
+    function vcResetConversation() {
+      vcSessionId = crypto.randomUUID();
+      vcFinalTranscript = '';
+      document.getElementById('vc-transcript-box').style.display = 'none';
+      document.getElementById('vc-answer-box').style.display = 'none';
+      document.getElementById('vc-status').textContent = 'New conversation started.';
+    }
+
+    function handleHashNavigation() {
+      const hash = window.location.hash; // e.g. "#app4"
+      if (!hash) return; // no hash — default App 3 stays selected
+
+      const appNum = hash.replace('#app', ''); // "4"
+      const validApps = ['3', '4', '5', '6', '7', '75', '8'];
+
+      if (validApps.includes(appNum)) {
+        switchApp(parseInt(appNum));
+      }
+    }
+
+    // Run on page load
+    window.addEventListener('load', handleHashNavigation);
+
+    // Also run if user navigates back/forward in browser
+    window.addEventListener('hashchange', handleHashNavigation);
+
+  </script>
 
 </body>
+
 </html>
