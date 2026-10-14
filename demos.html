@@ -140,6 +140,10 @@
       background: var(--gold);
       color: #000;
     }
+   @media (max-width: 520px) {
+    .header-actions { gap: 10px; }
+    .back-link { display: none; }
+  }
 
     /* ── HERO ── */
     .hero {
@@ -1024,7 +1028,7 @@
     <div class="hero">
       <div class="hero-eyebrow">Live demos · .NET + AI · Built with Semantic Kernel</div>
       <h1>AI Apps — <em>Try Them Live</em></h1>
-      <p class="hero-desc">Four real AI applications running on Azure. No setup needed — just pick an app and start.</p>
+      <p class="hero-desc">Seven live AI applications running on Azure. No setup needed — just pick an app and start.</p>
       <div class="app-pills">
         <button class="pill active" data-app="3" onclick="switchApp(3)">App 3 — Chat</button>
         <button class="pill" data-app="4" onclick="switchApp(4)">App 4 — PDF Q&A</button>
@@ -1399,8 +1403,7 @@
         </div>
 
         <p class="hint" style="text-align:center; margin-top:16px;">
-          Works in Chrome or Edge · Try: <strong>"What is Semantic Kernel?"</strong> · <strong>"Explain RAG in one
-            sentence"</strong>
+          Works in Chrome or Edge · Try: <strong>"What is the capital of France?"</strong> then <strong>"What's its population?"</strong> — it remembers
         </p>
       </div>
     </div>
@@ -1431,7 +1434,7 @@
       app6: 'https://aiapp6multimodalvision-eab0hkbfc6bjgeca.centralindia-01.azurewebsites.net',
       app7: 'https://aiapp7voice-himanshu-bzgwg5d9azd0bbg2.centralindia-01.azurewebsites.net',
       app75: 'https://aiapp7-5multiagent-cuard3affzdsa7dc.centralindia-01.azurewebsites.net',
-      app8: 'https://aiapp8voicecompanion-himanshu-bucweya4hefub6hu.centralindia-01.azurewebsites.net/'
+      app8: 'https://aiapp8voicecompanion-himanshu-bucweya4hefub6hu.centralindia-01.azurewebsites.net'
     };
 
     // ── STATE ──
