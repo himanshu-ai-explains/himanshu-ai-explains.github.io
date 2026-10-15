@@ -1028,7 +1028,7 @@
     <div class="hero">
       <div class="hero-eyebrow">Live demos · .NET + AI · Built with Semantic Kernel</div>
       <h1>AI Apps — <em>Try Them Live</em></h1>
-      <p class="hero-desc">Seven live AI applications running on Azure. No setup needed — just pick an app and start.</p>
+      <p class="hero-desc">Seven live AI applications running on Azure, plus a recorded offline demo. No setup needed — just pick an app and start.</p>
       <div class="app-pills">
         <button class="pill active" data-app="3" onclick="switchApp(3)">App 3 — Chat</button>
         <button class="pill" data-app="4" onclick="switchApp(4)">App 4 — PDF Q&A</button>
@@ -1037,6 +1037,7 @@
         <button class="pill" data-app="7" onclick="switchApp(7)">App 7 — Voice AI</button>
         <button class="pill" data-app="75" onclick="switchApp(75)">App 7.5 — Multi-Agent</button>
         <button class="pill" data-app="8" onclick="switchApp(8)">App 8 — Voice Companion</button>
+        <button class="pill" data-app="9" onclick="switchApp(9)">App 9 — Offline AI (recorded)</button>
       </div>
     </div>
 
@@ -1403,22 +1404,57 @@
         </div>
 
         <p class="hint" style="text-align:center; margin-top:16px;">
-          Works in Chrome or Edge · Try: <strong>"What is the capital of France?"</strong> then <strong>"What's its population?"</strong> — it remembers
+            Works in Chrome or Edge · Try: <strong>"What is the capital of France?"</strong> then <strong>"What's its
+            population?"</strong> — it remembers        
         </p>
       </div>
     </div>
+    <!-- ══ APP 9 — OFFLINE AI (RECORDED) ══ -->
+    <div class="app-panel" id="panel-9">
+      <div class="panel-header">
+        <div class="panel-icon" style="background:var(--coraldim); color:var(--coral)">✈️</div>
+        <div class="panel-meta">
+          <div class="panel-name" style="color:var(--coral)">Offline AI — No Cloud, No API</div>
+          <div class="panel-desc">Phi-3-mini runs on a laptop CPU through ONNX Runtime + Semantic Kernel · Recorded
+            demo, runs locally</div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <p style="font-size:13px; color:var(--text2); margin-bottom:16px; line-height:1.6;">
+          <strong style="color:var(--text);">Real use case:</strong> AI that works where the cloud can't or shouldn't
+          be used: private documents, factory floors, spotty connections. The model is 2.7 GB and the questions never
+          leave the machine. In the recording below I turn Wi-Fi off mid-demo and it keeps answering.
+        </p>
 
+        <video controls muted playsinline preload="metadata"
+          style="width:100%; border-radius:10px; border:1px solid var(--border); margin-bottom:16px;">
+          <source src="media/offline-ai-demo.mp4" type="video/mp4">
+          Your browser doesn't support video. See the GitHub folder below.
+        </video>
+
+        <p style="font-size:13px; color:var(--text2); line-height:1.6; margin-bottom:12px;">
+          <strong style="color:var(--text);">Honest numbers (laptop CPU, no GPU):</strong> first word in about 8–10 s
+          once warm (about 45 s on the very first question while the model loads), roughly 3 tokens/s. It's slow and
+          small, and it can get facts wrong. The trade-off is that it's free and private.
+        </p>
+
+        <p class="hint" style="text-align:center; margin-top:16px;">
+          Want to run it yourself? <a href="https://github.com/himanshu-ai-explains/dotnet-ai-journey/tree/main/AIApp9OfflineAI"
+            target="_blank" style="color:var(--coral);">Code + setup steps on GitHub →</a>
+        </p>
+      </div>
+    </div>
     <!-- BOTTOM LINKS -->
     <div style="text-align:center; padding:48px 0 32px; border-top:1px solid var(--border); margin-top:40px;">
       <p style="font-size:13px; color:var(--text3); margin-bottom:16px;">
-        All apps built with .NET 8 · Semantic Kernel · OpenAI GPT-4o · Deployed on Azure App Service
+        All apps built with .NET 8 · Semantic Kernel · Live apps on Azure App Service · App 9 runs locally
       </p>
       <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
         <a href="https://himanshu-ai-explains.github.io"
           style="font-size:13px; color:var(--text2); text-decoration:none;">← Portfolio</a>
         <a href="https://github.com/himanshu-ai-explains/dotnet-ai-journey" target="_blank"
           style="font-size:13px; color:var(--text2); text-decoration:none;">GitHub →</a>
-        <a href="https://www.linkedin.com/in/YOUR-LINKEDIN" target="_blank"
+        <a href="https://www.linkedin.com/in/himanshu-pandey-257bb23a4" target="_blank"
           style="font-size:13px; color:var(--text2); text-decoration:none;">LinkedIn →</a>
       </div>
     </div>
@@ -2242,7 +2278,7 @@
       if (!hash) return; // no hash — default App 3 stays selected
 
       const appNum = hash.replace('#app', ''); // "4"
-      const validApps = ['3', '4', '5', '6', '7', '75', '8'];
+      const validApps = ['3', '4', '5', '6', '7', '75', '8', '9'];
 
       if (validApps.includes(appNum)) {
         switchApp(parseInt(appNum));
